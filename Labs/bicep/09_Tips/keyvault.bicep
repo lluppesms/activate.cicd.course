@@ -80,6 +80,7 @@ var adminAccessPolicies = [for adminUser in adminUserObjectIds: {
     keys: [ 'all' ]
   }
 }]
+
 var applicationUserPolicies = [for appUser in applicationUserObjectIds: {
   objectId: appUser
   tenantId: subTenantId

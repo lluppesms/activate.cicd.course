@@ -77,7 +77,7 @@ module keyVaultModule 'keyvault.bicep' = {
     keyVaultName: resourceNames.outputs.keyVaultName
     location: location
     commonTags: commonTags
-    adminUserObjectIds: [ keyVaultOwnerUserId ]
+    adminUserObjectIds: keyVaultOwnerUserId == '' ? [] : [ keyVaultOwnerUserId ]
     applicationUserObjectIds: [ functionModule.outputs.principalId ]
     workspaceId: logAnalyticsWorkspaceModule.outputs.id
   }
