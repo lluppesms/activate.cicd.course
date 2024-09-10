@@ -11,10 +11,9 @@ If you want to run through the official Learning Path from Microsoft Learn, thos
 <details>
   <summary>Before You Start...</summary>
 
-* [Lab 0.1 - Tooling with Visual Studio Code](../setup/Visual-Studio-Code.md)
-* [Lab 0.2 - Setting up an Azure DevOps Project](../setup/Create-Azdo-Project.md)
-* [Lab 0.3 Import the Class Repository](../../setup/Clone-Repo.md)
-* [Lab 1 - Getting the Lab Examples](./01_Importing/readme.md)
+* [Lab 1.1 - Setting up an Azure DevOps Project](../setup/1-Create-Azdo-Project.md)
+* [Lab 1.2 - Tooling with Visual Studio Code](../setup/2-Visual-Studio-Code.md)
+* [Lab 1.3 - Import the Class Repository](../setup/3-Clone-Repo.md)
 
 </details>
 

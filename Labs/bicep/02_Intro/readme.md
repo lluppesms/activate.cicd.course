@@ -7,7 +7,7 @@
 Open a terminal in VS Code (menu: Terminal -> New Terminal) and execute the following command to change to the Lab folder:
 
 ``` bash
-cd Labs\Bicep\03_Intro
+cd Labs\Bicep\02_Intro
 ```
 
   ![Terminal](img/Terminal_01.png)

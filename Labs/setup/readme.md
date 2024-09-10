@@ -1,11 +1,13 @@
-# Lab 0 - Pre-Requisites
+# Exercise - Pre-Requisites
 
-In Lab 0 we are will start by making sure you have the proper prerequisites to run these labs.
+We will start by making sure you have the proper prerequisites to run these labs.
 
 Exercises:
 
-* [0.1 Create an Azure DevOps Project](../setup/Create-Azdo-Project.md)
+* [0.1 Create an Azure DevOps Project](../setup/1-Create-Azdo-Project.md)
 
-* [0.2 Create a Custom Build Agent](../build-agents/desktop-runner/readme.md)
+* [0.2 Set up Visual Studio Code](../setup/2-Visual-Studio-Code.md)
 
-* [0.3 Set up Visual Studio Code (Optional)](../setup/Visual-Studio-Code.md)
+* [0.3 Clone the class repository](../setup/3-Clone-Repo.md)
+
+* [0.4 Create a Custom Build Agent (Optional)](../build-agents/desktop-runner/readme.md)

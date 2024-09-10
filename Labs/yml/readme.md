@@ -2,9 +2,9 @@
 
 ## Getting Started
 
-You will need an Azure DevOps Organization and Project in order to complete this workshop. If you don't already have an Azure DevOps Organization, you can create one for free at [dev.azure.com](http://dev.azure.com). You will also need an Azure Subscription to deploy resources to Azure.  For more detailed information on setting an organization and project, see the [Create an Azure DevOps Project](../setup/Create-Azdo-Project.md) document for more information.
+You will need an Azure DevOps Organization and Project in order to complete this workshop. If you don't already have an Azure DevOps Organization, you can create one for free at [dev.azure.com](http://dev.azure.com). You will also need an Azure Subscription to deploy resources to Azure.  For more detailed information on setting an organization and project, see the [Create an Azure DevOps Project](../setup/1-Create-Azdo-Project.md) document for more information.
 
-Once we proceed to the Bicep part of the course, you will also want an editor like VS Code to edit the YML and Bicep files, and a few key extensions to make things better. See the [Visual Studio Code Setup](../setup//Visual-Studio-Code.md) document for more information.
+Once we proceed to the Bicep part of the course, you will also want an editor like VS Code to edit the YML and Bicep files, and a few key extensions to make things better. See the [Visual Studio Code Setup](../setup//2-Visual-Studio-Code.md) document for more information.
 
 If you need a Build Agent for this class, you can refer to the [Creating a Custom Build Agent](../build-agents/desktop-runner/readme.md) document to assist you in creating it. You can use the default of the Microsoft Hosted Agents, but if you have a large class it may be better to each have your own custom custom agent.
 
@@ -15,9 +15,9 @@ This workshop will cover a series of labs, in which you will learn to create eff
 <details>
   <summary>Before You Start...</summary>
 
-* [Lab 0.1 - Create an Azure DevOps Project](../setup/Create-Azdo-Project.md)
+* [Lab 0.1 - Create an Azure DevOps Project](../setup/1-Create-Azdo-Project.md)
 * [Lab 0.2 - Create a Custom Build Agent](../build-agents/desktop-runner/readme.md)
-* [Lab 0.3 - Set up Visual Studio Code (Optional)](../setup//Visual-Studio-Code.md)
+* [Lab 0.3 - Set up Visual Studio Code (Optional)](../setup//2-Visual-Studio-Code.md)
 
 </details>
 

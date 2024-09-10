@@ -63,4 +63,3 @@ Some other useful extensions you might want to install for Infrastructure as Cod
 <!-- ------------------------------------------------------------------------------------------ -->
 
 This completes this lab.
-
