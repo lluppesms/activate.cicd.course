@@ -1,6 +1,6 @@
 # YML Lab 3 - Working with YML Templates
 
-In this lab we are now going to take a deeper look into one of the powerful features of YML-based pipelines in Azure DevOps. We are going to work with YML Templates. So first of all let us start with a question:
+In this lab we are now going to take a deeper look into one of the powerful features of YML-based pipelines in Azure DevOps. We are going to work with YML Templates. So first of all Let's start with a question:
 
 **Why do I need templates and why should I use them?**
 
@@ -21,11 +21,11 @@ Exercises:
 
 ## Exercise 3.1: Load Steps from Templates
 
-Let us start with a basic example. We want to extend a new pipeline, like the one we created in [Lab 1](../01_Starter/readme.md) and [Lab 2](../02_Stages/readme.md), with its **steps** stored in a **template**.  This is one of the most important concepts to main as it will enable you to create repeatable and reusable patterns that can be used across multiple pipelines.
+Let's start with a basic example. We want to extend a new pipeline, like the one we created in [Lab 1](../01_Starter/readme.md) and [Lab 2](../02_Stages/readme.md), with its **steps** stored in a **template**.  This is one of the most important concepts to main as it will enable you to create repeatable and reusable patterns that can be used across multiple pipelines.
 
 > **Important!** Make sure that you have, as part of [Lab 1](../01_Starter/readme.md#11-create-a-yaml-pipeline-via-gui), imported our GitHub repository into your Azure DevOps project.
 
-Let us start..
+Let's start..
 
 * Goto Pipelines -> Pipelines
 * Click `New pipeline`
@@ -35,17 +35,17 @@ Let us start..
 
 This will now create new new `Starter pipeline` in our repository.
 
-Let us give our new pipeline a name that is a bit better than the default azure-pipelines-1-yml.
+Let's give our new pipeline a name that is a bit better than the default azure-pipelines-1-yml.
 
 * Click on the filename
 
 ![Rename Starter Pipeline](img/020_rename_starter_pipeline.png)
 
-Let us use `starter-pipeline-with-template.yml`.
+Let's use `starter-pipeline-with-template.yml`.
 
 ![Renamed Starter Pipeline](img/030_renamed_starter_pipeline.png)
 
-Now that we have created a new pipeline and renamed the file successfully, let us reference a template that contains our additional steps/tasks.
+Now that we have created a new pipeline and renamed the file successfully, Let's reference a template that contains our additional steps/tasks.
 
 To achieve this we can now add the following line to the end of our pipeline:
 
@@ -203,7 +203,7 @@ Conditions can be applied to stages, jobs and individual tasks. Let's now add a 
 * Goto Pipelines -> Pipelines
 * Find the pipeline from the previous task
 
-Before we proceed let us give it a better name.
+Before we proceed Let's give it a better name.
 
 * Click on the following button:
 

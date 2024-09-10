@@ -13,7 +13,7 @@ Exercises:
 
 ## Exercise 8.1: Build Pipelines and Artifacts
 
-Let us start with a build pipeline that creates and publishes build artifacts for us.
+Let's start with a build pipeline that creates and publishes build artifacts for us.
 
 * Goto Repos > Branches
 * Create a new branch "lab8" that is based on main

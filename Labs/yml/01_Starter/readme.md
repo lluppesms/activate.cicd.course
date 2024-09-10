@@ -158,7 +158,7 @@ This is the summary of a specific pipeline run. You can come back at any time to
 
 The previously created pipeline was very basic. It does not contain much more than a one-line script that prints out `Hello World` and a multi-line script that prints out two lines with very basic echo commands.
 
-Let us now have a deeper look into the output of your pipeline.
+Let's now have a deeper look into the output of your pipeline.
 
 1. Click on `Pipelines` > `Pipelines`
 1. Click on your pipeline in `Recently run pipelines`
@@ -280,7 +280,7 @@ There are several ways to store and call variables. We are starting with a very 
 
     ![Add variable to pipeline](img/200_use_variable_in_pipeline.png)
 
-    Let us now save and run our pipeline to see the changes in action:
+    Let's now save and run our pipeline to see the changes in action:
 
 1. Click `Save` (top right), default to `Commit directly to the main branch`, then click `Save`
 1. Click `Run` (top right), default to running pipeline on `main`, then click `Run`
@@ -295,7 +295,7 @@ There are several ways to store and call variables. We are starting with a very 
 
 In all our previous steps we have always modified our pipeline in the `Pipelines` > `Pipelines` section using the Pipeline Editor within our browser, but that is not the only way. One of the benefits of using a YAML-based pipeline is that it is stored within an Azure Repo.
 
-Let us look at our Pipeline in our Azure Repo:
+Let's look at our Pipeline in our Azure Repo:
 
 1. Click on `Repos` -> `Files`
 

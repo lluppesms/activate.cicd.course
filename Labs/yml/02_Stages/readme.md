@@ -104,7 +104,7 @@ The default setting is to delete your newly created branch after merging. Leave 
 
 Merging our PR will **not** automatically start a new pipeline run as we set our trigger to _none_.
 
-Let us start (by clicking `Run New`) the pipeline manually and take a look:
+Let's start (by clicking `Run New`) the pipeline manually and take a look:
 
 * Click Pipelines -> Pipelines, select our pipeline, select the last run
 
@@ -120,14 +120,14 @@ When you click on one of the jobs, you can see more details about the steps and 
 
 Jobs are a great feature to run tasks in parallel, in a specific order or on different platforms (Windows, Linux, etc.).
 
-Before we now proceed with the next task, let us add a dependency to make sure that part1 is executed before part2 in our pipeline.
+Before we now proceed with the next task, Let's add a dependency to make sure that part1 is executed before part2 in our pipeline.
 
 <!-- ------------------------------------------------------------------------------------------ -->
 ---
 
 ## Exercise 2.2: Adding Dependencies between Jobs
 
-Let us now go back to our pipeline and add a dependency:
+Let's now go back to our pipeline and add a dependency:
 
 * Goto Pipelines -> Pipelines, select our pipeline, and click `Edit`
 * Add a new line after `- job: part2` (the line number might vary)
@@ -267,7 +267,7 @@ Let's go back to our pipeline:
 
 This will define what is already defined due to the order of our stages. Stage2 will now depend on Stage1 and will not be executed before Stage1 was successfully finished.
 
-To make it a bit more interesting, let us now add a third stage that depends on Stage2.
+To make it a bit more interesting, Let's now add a third stage that depends on Stage2.
 
 * Goto the end of our pipeline
 * Add the following code
@@ -316,7 +316,7 @@ If you want your stage to depend on multiple other stages, you can specify them 
   - DeployUS2
 ```
 
-Let us do a last change in our pipeline to close the loop and to bring the stages back together as part of an additional, last stage:
+Let's do a last change in our pipeline to close the loop and to bring the stages back together as part of an additional, last stage:
 
 * Goto Pipelines -> Pipelines, select our pipeline, and click `Edit`
 * Goto the end of our pipeline, and add the following code

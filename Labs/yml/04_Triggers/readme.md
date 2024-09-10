@@ -258,7 +258,7 @@ In the next dialog you can review your pull request. When you have completed you
 
 * Click on `Complete`
 
-Now that our changes are in main, let us check the pipeline triggers.
+Now that our changes are in main, Let's check the pipeline triggers.
 
 * Goto Pipelines -> Pipelines
 * Select our `Working with triggers` pipeline
