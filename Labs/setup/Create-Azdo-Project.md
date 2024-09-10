@@ -36,4 +36,4 @@ We are now done with the preparation for our lab.
 <!-- ------------------------------------------------------------------------------------------ -->
 ---
 
-[Begin First Lab](/Labs/lab1/lab1.md) | [Create a Custom Build Agent](/Labs/Build-Agents/desktop-runner/readme.md) | [VS Code Install](/Labs/lab0/Visual-Studio-Code.md) | [Table of Contents](./readme.md)
+[Begin First Lab](../yml/01_Starter/readme.md) | [Create a Custom Build Agent](../build-agents/desktop-runner/readme.md) | [VS Code Install](../setup/Visual-Studio-Code.md) | [Table of Contents](../../readme.md)

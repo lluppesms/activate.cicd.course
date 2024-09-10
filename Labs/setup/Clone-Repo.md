@@ -2,9 +2,9 @@
 
 In Lab 1 we are starting with an introduction into Pipelines-as-Code with Azure DevOps by building a first, basic Pipeline using the Azure DevOps Portal.
 
-> If you have not created an Organization and a Project in Azure DevOps, please start with the preparation tasks in the [0.1 Create an Azure DevOps Project](./Create-Azdo-Project.md) guide.
+> If you have not created an Organization and a Project in Azure DevOps, please start with the preparation tasks in the [Create an Azure DevOps Project](../../setup/Create-Azdo-Project.md) guide.
 
-> If you need a custom Build Agent and have not created a Build Agent yet, you can install a Build Agent on your VM or Local Machine.  Please follow the instructions in the [0.2 Create a Custom Build Agent](/Labs/Build-Agents/desktop-runner/readme.md) guide.
+> If you need a custom Build Agent and have not created a Build Agent yet, you can install a Build Agent on your VM or Local Machine.  Please follow the instructions in the [Create a Custom Build Agent](../../build-agents/desktop-runner/readme.md) guide.
 
 Exercises:
 

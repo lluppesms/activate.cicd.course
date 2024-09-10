@@ -13,6 +13,8 @@ Exercises:
 
 In this lab we will demonstrate how to create a central repository where you can have a library of shared YML templates that other projects can use. This is a common practice to ensure that all projects are using the same build and release definitions.  To do this, we will import an existing repository that contains some shared templates.
 
+> NOTE: This step may have been handled by your instructor already.  If so, you can skip this import and just use the existing template repository.  Check to see if the `azdo.course.library` repository already exists in your project.  If it does, you can skip to the next exercise.
+
 1. Navigate to **Repos** -> **Files** and select **Import a repository**
 
     ![Import Repository](img/010_import_repo.png)
@@ -24,14 +26,14 @@ In this lab we will demonstrate how to create a central repository where you can
     **Settings:**
 
     * Repository type: Git
-    * Clone URL: `https://github.com/lluppesms/azdo.cicd.library.git`
+    * Clone URL: `https://github.com/lluppesms/activate.cicd.library.git`
     * Name: azdo.course.library
 
 1. And click on "Import".
 
     ![Import Repository](img/030_import_repository.png)
 
-This will now import the sample template repository from GitHub into your Azure DevOps Repository.  We will use some of those templates in the following exercises.
+This will import the sample template repository from GitHub into your Azure DevOps Repository.  We will use some of those templates in the following exercises.
 
 <!-- ------------------------------------------------------------------------------------------ -->
 ---
@@ -90,7 +92,7 @@ When you look at the pipeline executing you should see multiple repositories tha
 
 ![Pipeline run](img/160_pipeline_run.png)
 
-Our new pipeline looks and works exactly the same as the pipelines with templates that we did in previous labs, but now we are referencing templates in a library that we do not have to maintain, or that are maintained by a central team.
+Our new pipeline looks and works exactly the same as the pipelines with templates that we did in previous labs, but now we are referencing templates in a library that we do not have to maintain, or that is maintained by a central team.
 
 This is a great way to create consistent repeatable maintainable pipelines that can be used across your organization!
 
