@@ -15,7 +15,7 @@ var sanitizedAppName = replace(replace(lowerAppName, '-', ''), '_', '')
 var sanitizedEnvironment = toLower(environmentCode)
 
 // --------------------------------------------------------------------------------
-var functionAppName = toLower('${lowerAppName}--${resourceAbbreviations.functionSuffix}${sanitizedEnvironment}')
+var functionAppName = toLower('${lowerAppName}-${resourceAbbreviations.functionSuffix}-${sanitizedEnvironment}')
 var baseStorageName = toLower('${sanitizedAppName}${sanitizedEnvironment}str')
 
 // --------------------------------------------------------------------------------
