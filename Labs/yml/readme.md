@@ -1,28 +1,27 @@
 # Activate CICD with Azure DevOps Using YML and Bicep
 
-## Getting Started
+## Prerequisites
 
 You will need an Azure DevOps Organization and Project in order to complete this workshop. If you don't already have an Azure DevOps Organization, you can create one for free at [dev.azure.com](http://dev.azure.com). You will also need an Azure Subscription to deploy resources to Azure.  For more detailed information on setting an organization and project, see the [Create an Azure DevOps Project](../setup/1-Create-Azdo-Project.md) document for more information.
 
 Once we proceed to the Bicep part of the course, you will also want an editor like VS Code to edit the YML and Bicep files, and a few key extensions to make things better. See the [Visual Studio Code Setup](../setup//2-Visual-Studio-Code.md) document for more information.
 
-If you need a Build Agent for this class, you can refer to the [Creating a Custom Build Agent](../build-agents/desktop-runner/readme.md) document to assist you in creating it. You can use the default of the Microsoft Hosted Agents, but if you have a large class it may be better to each have your own custom custom agent.
+If you have not created your own repository for the class based on the course materials, please follow the instructions in the [Import the Class Repository](../setup/3-Clone-Repo.md) guide.
+
+If you need a Build Agent for this class for some reason, you can refer to the [Creating a Custom Build Agent](../build-agents/desktop-runner/readme.md) document to assist you in creating it. You can use the default of the Microsoft Hosted Agents, but if you have a large class it may be better to each have your own custom custom agent.
 
 ## YML Labs
 
 This workshop will cover a series of labs, in which you will learn to create effective YML pipelines.
 
-<details>
-  <summary>Before You Start...</summary>
+### Before You Start
 
-* [Lab 0.1 - Create an Azure DevOps Project](../setup/1-Create-Azdo-Project.md)
-* [Lab 0.2 - Create a Custom Build Agent](../build-agents/desktop-runner/readme.md)
-* [Lab 0.3 - Set up Visual Studio Code (Optional)](../setup//2-Visual-Studio-Code.md)
+* [Lab 0.1 - Setting up an Azure DevOps Project](../setup/1-Create-Azdo-Project.md)
+* [Lab 0.2 - Tooling with Visual Studio Code](../setup/2-Visual-Studio-Code.md)
+* [Lab 0.3 - Import the Class Repository](../setup/3-Clone-Repo.md)
+* [Lab 0.4 - Creating a Custom Build Agent (optional)](../build-agents/desktop-runner/readme.md)
 
-</details>
-
-<details>
-  <summary>Lab 1 - Introduction To Pipelines</summary>
+### Introduction To Pipelines
 
 * [Lab 1 - Introduction](./01_Starter/readme.md)
   * [Create a YAML-Pipeline via GUI](./01_Starter/readme.md#exercise-11-create-a-yaml-pipeline-via-gui)
@@ -32,10 +31,7 @@ This workshop will cover a series of labs, in which you will learn to create eff
   * [Extend the pipeline with variables](./01_Starter/readme.md#exercise-15-extend-your-pipeline-with-variables)
   * [Check the pipeline within the repository](./01_Starter/readme.md#exercise-16-check-the-pipeline-within-your-repository)
 
-</details>
-
-<details>
-  <summary>Lab 2 - Tasks, Jobs, Stages and Dependencies</summary>
+### Tasks, Jobs, Stages and Dependencies
   
 * [Lab 2 - Tasks, Jobs, Stages and Dependencies](./02_Stages/readme.md)
   * [Separating tasks into different jobs](./02_Stages/readme.md#exercise-21-separating-tasks-into-different-jobs)
@@ -44,10 +40,7 @@ This workshop will cover a series of labs, in which you will learn to create eff
   * [Dependencies between stages](./02_Stages/readme.md#exercise-24-adding-dependencies-between-jobs-and-stages)
   * [Approvals](./02_Stages/readme.md#exercise-25-approvals)
 
-</details>
-
-<details>
-  <summary>Lab 3 - Working with Templates</summary>
+### Working with Templates
 
 * [Lab 3 - Working with Templates](./03_Templates/readme.md)
   * [Load steps from templates](./03_Templates/readme.md#exercise-31-load-steps-from-templates)
@@ -55,10 +48,7 @@ This workshop will cover a series of labs, in which you will learn to create eff
   * [Conditional Execution](./03_Templates/readme.md#exercise-33-conditions)
   * [Skipping stages](labs/lab3/lab3.md#exercise-34-skipping-stages)
 
-</details>
-
-<details>
-  <summary>Lab 4 - Triggers</summary>
+### Triggers
   
 * [Lab 4 - Triggers](./04_Triggers/readme.md)
   * [Working with triggers and branches](./04_Triggers/readme.md#exercise-4-1-working-with-triggers-and-branches)
@@ -66,10 +56,7 @@ This workshop will cover a series of labs, in which you will learn to create eff
   * [Schedule Triggers](./04_Triggers/readme.md#exercise-43-scheduled-trigger)
   * [Pull Request Triggers](./04_Triggers/readme.md#exercise-44-pull-request-triggers)
 
-</details>
-
-<details>
-  <summary>Lab 5 - More Variables and Parameters</summary>
+### More Variables and Parameters
 
 * [Lab 5 - More Variables and Parameters](./05_Variables/readme.md)
   * [5.1 Using Parameters](./05_Variables/readme.md#exercise-51-using-parameters)
@@ -81,30 +68,23 @@ This workshop will cover a series of labs, in which you will learn to create eff
   * [5.7 Loading Values from Key Vault](./05_Variables/readme.md#exercise-57-loading-values-from-key-vault)
   * [5.8 Verbose Logs](./05_Variables/readme.md#exercise-58-verbose-logs)
 
-</details>
-
-<details>
-  <summary>Lab 6 - Multiple Environments and Stages</summary>
+### Multiple Environments and Stages
 
 * [Lab 6 - Multiple Environments and Stages](./06_Environments/readme.md)
   * [6.1 Creating AzDO Environments](./06_Environments/readme.md#exercise-61-creating-azdo-environments)
   * [6.2 Deploying to Multiple Environments with Dependencies](./06_Environments/readme.md#exercise-62-deploying-to-multiple-environments-with-dependencies)
 
-</details>
-
-<details>
-  <summary>Lab 7 - Reusable Libraries</summary>
+### Reusable Libraries
 
 * [Lab 7 - Reusable Libraries](./07_TemplateRepository/readme.md)
   * [7.1 Creating a Template Repository](./07_TemplateRepository/readme.md#exercise-71-creating-a-template-repository)
 
-</details>
-
-<details>
-  <summary>Lab 8 - Using Resources - Splitting CI and CD</summary>
+### Using Resources - Splitting CI and CD
 
 * [Lab 8 - Splitting CI and CD](./08_CICD/readme.md)
   * [Creating a Build pipeline and saving the artifacts](./08_CICD/readme.md#exercise-81-build-pipelines-and-artifacts)
   * [Creating a Release Pipeline using a pre-built artifact](./08_CICD/readme.md#exercise-82-working-with-build-artifacts)
 
-</details>
+---
+
+[Table of Contents](../../readme.md)

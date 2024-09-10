@@ -4,7 +4,7 @@
 
 Open the [loganalytics.bicep](./loganalytics.bicep) file and compare it to the [simple file](./simplest-loganalytics.bicep) you deployed in the previous lab.  The very simple file we deployed in the last lab had very few values and just took the defaults for everything.  In this version we will start to introduce new parameters to deploy the resource exactly how we want it deployed.
 
-You can compare files in VS Code by clicking on the file you want to compare and then control-clicking on the second file you want to compare and then right-clicking on one of the files and select `Compare Selected`.  You can see that the new file still has the same defaults, but they are defined on `param` statements so they can be overridden.
+You can compare files in VS Code by clicking on the file you want to compare and then control-clicking on the second file you want to compare to select TWO files, then right-clicking on one of the files and select `Compare Selected`.  You can see that the new file still has the same default values, but they are defined on `param` statements so they can be overridden.
 
   ![Comparison](img/Comparison_01.png)
 
@@ -20,6 +20,7 @@ Let's deploy a workspace using the defaults with the same command as in the prev
 az deployment group create `
  --resource-group rg_demo `
  --template-file loganalytics.bicep
+
 ```
 
 ## Supplying a Parameter
@@ -31,6 +32,7 @@ az deployment group create `
  --resource-group rg_demo `
  --template-file loganalytics.bicep `
  --parameters logAnalyticsWorkspaceName=logAnalytics02
+ 
 ```
 
 Once your deploy has finished, review your resources in Azure to ensure that the new workspace was created as expected.

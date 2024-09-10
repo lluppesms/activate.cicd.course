@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------------------
 // Main Bicep file that creates all of the Azure Resources for one environment
 // --------------------------------------------------------------------------------
-param appName string = ''
+param appName string = 'myapp${uniqueString(resourceGroup().id)}'
 @allowed(['dev','demo','qa','stg','ct','prod'])
 param environmentCode string = 'dev'
 param location string = resourceGroup().location

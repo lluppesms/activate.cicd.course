@@ -2,7 +2,7 @@
 
 ## 1. Use a resource names file
 
-The `resourcenames.bicep` file is a technique to put all of my object naming standards in one file. I came up with my version of a “resourcenames.bicep” files, and it is the first module that I call in each of my `main.bicep` files. Having all the names in this one place gives an easy way to change things later if needed, without affecting all the other files.
+The [resourcenames.bicep](resourcenames.bicep) file is a technique to put all of the object naming standards in one file. This is the first module that I usually call in each of my `main.bicep` files. Having all the names in this one place gives one an easy way to change things later if needed, without affecting all the other files.
 
 The main inputs to this module are usually some form of the application Name and the environment, which are then used to create a unique name for all the main resources.
 
@@ -86,10 +86,21 @@ In addition to functions, you can also define custom data types to structure var
 
 For more info, see [User Defined Data Types (Microsoft Learn)](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/user-defined-data-types)
 
-<!-- ------------------------------------------------------------------------------------------ -->
+---
+
+All of these resources are in this folder.  Feel free to explore them and to deploy the main.bicep file to see how they all work together.
+
+``` bash
+az deployment group create `
+ --name bicep.tips.01 `
+ --resource-group rg_demo `
+ --template-file main.bicep
+
+```
 
 ---
 
+<!-- ------------------------------------------------------------------------------------------ -->
 This completes this lab.
 
 [Previous Lab](../08_Deploy_Targets/readme.md) | [Table of Contents](./readme.md)
