@@ -1,0 +1,30 @@
+# ----------------------------------------------------------------------------------------------------
+# Variables for location of source for console app
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - name: sourceVariableFile
+    value: 'console'
+  - name: appFolderName
+    value: 'src/Dadabase'
+  - name: appSolutionName
+    value: 'Dadabase.Tester'
+  - name: appProjectName
+    value: 'Dadabase.Tester'
+  - name: appProjectFolderName
+    value: 'src/Dadabase/Dadabase.Tester'
+  - name: exeName
+    value: 'Dadabase.Tester'
+  - name: appProjectExtension
+    value: 'csproj'
+
+  - name: workingDirectoryInfra
+    value: '/Labs/Module_10_CICD_Pipelines/bicep'
+    #value: '/infra/bicep'
+  - name: workingDirectoryIgnore
+    value: '/Docs'
+
+  - name: buildPlatform
+    value: 'Any CPU'
+  - name: buildConfiguration
+    value: 'Release'
+

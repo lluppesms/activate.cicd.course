@@ -1,0 +1,19 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# 1. The simplest pipeline to deploy Bicep Resources
+# ------------------------------------------------------------------------------------------------------------------------
+trigger: none
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+ - job:
+   steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        azureResourceManagerConnection: 'Demo Service Connection'
+        resourceGroupName: 'rg_demo'
+        location: 'eastus'
+        csmFile: '$(Build.SourcesDirectory)/Labs/Module_10_CICD_Pipelines/bicep/storageaccount.bicep'
+        overrideParameters: >
+          -storageAccountName xxxdemostorage
+          -storageSku Standard_LRS

@@ -1,0 +1,53 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Example Pipeline to scan IaC code and deploy it using reusable templates
+# ------------------------------------------------------------------------------------------------------------------------
+# This pipelines needs a variable group named "Demo.DadABase" with these values:
+#   apiKey='<yourapiKey>'
+#   adDomain='yourDomain.onmicrosoft.com'
+#   adTenantId='yourTenantId'
+#   adClientId='yourClientId'
+#   adInstance='yourLoginInstance'
+# Alternatively, you could define these variables in the Azure DevOps Portal the pipeline definition, 
+# but a variable group is a more repeatable and scriptable way to do it.
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: Demo.DadABase
+  - template: vars/var-common.yml
+
+# ----------------------------------------------------------------------------------------------------
+stages:
+  - stage: ScanApplication
+    displayName: Scan Application
+    jobs:
+    - template: templates/template-scan-code.yml
+
+  - stage: BicepDeployDev
+    displayName: Bicep Dev Deploy
+    dependsOn: ScanApplication
+    condition: succeeded('ScanApplication')
+    jobs:
+    - template: templates/template-deploy-bicep.yml
+      parameters:
+        environmentName: 'DEV'
+        bicepPath: $(bicepPath)
+        bicepFile: 'main-web-app.bicep'
+        parameterFile: 'main-web-app.bicepparam'
+
+  - stage: BicepDeployQA
+    displayName: Bicep QA Deploy
+    dependsOn: BicepDeployDev
+    condition: succeeded('BicepDeployDev')
+    jobs:
+    - template: templates/template-deploy-bicep.yml
+      parameters:
+        environmentName: 'QA'
+        bicepPath: $(bicepPath)
+        bicepFile: 'main-web-app.bicep'
+        parameterFile: 'main-web-app.bicepparam'

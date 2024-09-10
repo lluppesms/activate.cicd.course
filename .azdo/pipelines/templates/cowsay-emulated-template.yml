@@ -1,0 +1,40 @@
+# This template emulates running the vanessa/cowsay Docker image.
+# On some of the lab VMs, Docker is not installed, so we will emulate the Docker commands.
+
+steps:
+- script: |
+    echo Skipping the next step because this is emulated...
+    echo   docker pull vanessa/cowsay
+  displayName: Docker (emulated) pull image
+
+- script: |
+    echo Emulating the cowthink command...
+    echo "     ____________________________________ "
+    echo "    ( It's a lovely day for some cheese. )"
+    echo "     ------------------------------------ "
+    echo "           \   ^__^                       "
+    echo "            \  (oo)\_______               "
+    echo "               (__)\       )\/\           "
+    echo "                   ||----w |              "
+    echo "                   ||     ||              "
+  displayName: cowthink (emulated) Docker run
+  enabled: true
+
+- script: |
+    echo Emulating the cowsay run animal vader-koala command...
+    echo "     _____________________________________ "
+    echo "    ( I find your lack of milk disturbing )"
+    echo "     ------------------------------------- "
+    echo "               \                           "
+    echo "                \        .                 "
+    echo "                 .---.  //                 "
+    echo "                Y|o o|Y//                  "
+    echo "               /_(i=i)K/                   "
+    echo "               ~()~*~()~                   "
+    echo "                (_)-(_)                    "
+    echo "                                           "
+    echo "                 Darth                     "
+    echo "                 Vader                     "
+    echo "                 koala                     "
+  displayName: cowthink animal (emulated) Docker run
+  enabled: true

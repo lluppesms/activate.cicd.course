@@ -1,0 +1,33 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# 2. A pipeline to deploy Bicep Resources using user parameters
+# ------------------------------------------------------------------------------------------------------------------------
+trigger: none
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: storageAccountName
+    displayName: Storage Account Name
+    type: string
+    default: xxxdemostorage2
+  - name: storageSku
+    displayName: Storage SKU
+    type: string
+    values:
+      - Standard_LRS
+      - Standard_GRS
+      - Standard_RAGRS
+    default: Standard_LRS
+
+jobs:
+ - job:
+   steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        azureResourceManagerConnection: 'Demo Service Connection'
+        resourceGroupName: 'rg_demo'
+        location: 'eastus'
+        csmFile: '$(Build.SourcesDirectory)/Labs/Module_10_CICD_Pipelines/bicep/storageaccount.bicep'
+        overrideParameters: >
+          -storageAccountName ${{ parameters.storageAccountName }}
+          -storageSku ${{ parameters.storageSku }}

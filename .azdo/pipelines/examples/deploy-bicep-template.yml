@@ -1,0 +1,30 @@
+parameters:
+- name: environmentName
+  default: 'DEV'
+- name: bicepFile
+  default: 'main.bicep'
+- name: bicepParameterFile
+  default: 'main.bicepparam'
+
+jobs:
+- deployment: DeployBicepInfra
+  environment: ${{ parameters.environmentName }}
+
+- job: DeployBicep
+  variables:
+    - name: azureResourceManagerConnection
+      value: 'Demo Service Connection'
+    - name: resourceGroupName
+      value: 'rg_demo'
+    - name: location
+      value: 'eastus'
+
+  steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        azureResourceManagerConnection: $(azureServiceConnection)
+        resourceGroupName: $(resourceGroupName)
+        location: $(location)
+        csmFile: ${{ parameters.bicepFile }}
+        csmParametersFile: ${{ parameters.bicepParameterFile }}
+

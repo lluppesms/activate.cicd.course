@@ -1,0 +1,34 @@
+# ----------------------------------------------------------------------------------------------------
+# Variables for location of source for function app
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - name: sourceVariableFile
+    value: 'app'
+  - name: appFolderName
+    value: 'src/Dadabase'
+  - name: appSolutionName
+    value: 'DadABase.Web.App'
+  - name: appProjectFolderName
+    value: 'src/Dadabase/DadABase.Web'
+  - name: appProjectName
+    value: 'DadABase.Web'
+  - name: exeName
+    value: 'DadABase.Web'
+  - name: appProjectExtension
+    value: 'csproj'
+
+  - name: testFolderName 
+    value: 'src/Dadabase/DadABase.Tests'
+  - name: testProjectName
+    value: 'DadABase.Tests'
+
+  - name: workingDirectoryInfra
+    value: '/Labs/Module_10_CICD_Pipelines/bicep'
+    #value: '/infra/bicep'
+  - name: workingDirectoryIgnore
+    value: '/Docs'
+
+  - name: buildPlatform
+    value: 'Any CPU'
+  - name: buildConfiguration
+    value: 'Release'

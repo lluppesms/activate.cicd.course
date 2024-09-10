@@ -1,0 +1,23 @@
+# cd ../..
+# cd Labs\Bicep\03_Parameters
+
+#!/bin/sh
+## Create resource group
+# az group create --name rg_demo --location $location
+
+## Override One Parameter on the command line
+az deployment group create --resource-group rg_demo --template-file loganalytics.bicep --parameters logAnalyticsWorkspaceName=logAnalytics02 --name loganalytics.param.01
+
+## Deploy Bicep with JSON parameter file
+az deployment group create --resource-group rg_demo --template-file loganalytics.bicep --parameters loganalytics.parameters.json --name loganalytics.file.json.01
+
+## Deploy Bicep with Bicep parameter file
+az deployment group create --resource-group rg_demo --template-file loganalytics.bicep --parameters loganalytics.bicepparam --name loganalytics.file.bicep.01
+
+## Override One Parameter on the command line
+az deployment group create --resource-group rg_demo --template-file loganalytics.bicep --parameters loganalytics.bicepparam logAnalyticsWorkspaceName=logAnalytics02 --name loganalytics.file.bicep.02
+
+## What would this deploy do if I ran it...? (add the --what-if parameter...)
+az deployment group create --what-if --resource-group rg_demo --template-file loganalytics.bicep --parameters loganalytics.bicepparam retentionInDays=60 --name loganalytics.whatif.01
+## Cleanup Resource Group
+# az group delete --name rg_demo --yes --no-wait

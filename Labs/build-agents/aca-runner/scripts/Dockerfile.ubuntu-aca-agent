@@ -1,0 +1,136 @@
+# docker build --tag "azp-agent:ubuntu" --file "./Dockerfile.ubuntu-aca-agent" .
+
+FROM ubuntu:22.04
+#FROM ubuntu:18.04
+ENV TARGETARCH="linux-x64"
+# Also can be "linux-arm", "linux-arm64".
+
+RUN apt update
+RUN apt upgrade -y
+RUN apt install -y curl git jq libicu70
+
+# To make it easier for build and release pipelines to run apt-get,
+# configure apt to not require confirmation (assume the -y argument by default)
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
+
+RUN apt-get update \
+&& apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        jq \
+        git \
+        iputils-ping \
+        libcurl4 \
+#        libicu60 \
+        libunwind8 \
+        netcat \
+#        libssl3 \
+        libssl1.0 \
+        maven \
+        time \
+        unzip \
+        wget \
+        zip \
+        tree \
+        tzdata \
+        apt-utils \
+        apt-transport-https \
+        xvfb \
+        sudo \
+        nodejs \
+        gnupg-agent \
+        software-properties-common \
+ && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /etc/apt/sources.list.d/*
+
+RUN curl https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb > packages-microsoft-prod.deb \
+ && dpkg -i packages-microsoft-prod.deb \
+ && rm packages-microsoft-prod.deb \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends \
+#     apt-transport-https \
+#     dotnet-sdk-2.1 \
+#     dotnet-sdk-3.1 \
+#     dotnet-sdk-5.0 \
+#     dotnet-host \
+    dotnet-sdk-6.0 \
+#     dotnet-sdk-8.0 \
+ && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /etc/apt/sources.list.d/*
+ 
+# RUN dotnet help
+ENV dotnet=/usr/bin/dotnet
+
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+# Install Bicep
+RUN curl -Lo bicep https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64 && \
+    chmod +x ./bicep && \
+    mv ./bicep /usr/local/bin/bicep
+
+# Install Powershell
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    #apt-get install -y wget apt-transport-https software-properties-common && \
+    # source /etc/os-release && \
+    VERSION_ID="22.04" && \
+    wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb && \
+    apt-get update && \
+    apt-get install -y powershell
+
+# Install nodejs and npm
+RUN apt-get install --yes nodejs
+RUN node -v
+RUN apt-get update && apt-get install -y npm && apt-get clean
+RUN npm -v
+
+# Install python
+RUN apt-get install python2.7 
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
+RUN python2.7 get-pip.py
+RUN pip install zapcli
+
+# Install az cli
+# python3-pip python-pip
+RUN apt-get update && apt-get -y upgrade && \
+    apt-get -f -y install lsb-release gnupg && \
+    curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.asc.gpg && \
+    CLI_REPO=$(lsb_release -cs) && \
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ ${CLI_REPO} main" \
+    > /etc/apt/sources.list.d/azure-cli.list && \
+    apt-get update && \
+    apt-get install -y azure-cli && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install docker
+RUN apt-get update
+RUN apt-get install docker-ce docker-ce-cli containerd.io   
+RUN pip install docker-compose 
+
+# # Install GHAzDO (???)
+# # See https://learn.microsoft.com/en-us/azure/devops/repos/security/github-advanced-security-code-scanning?view=azure-devops
+# RUN curl https://github.com/microsoft/GHAzDO-Resources/blob/main/src/agent-setup/codeql-install-ubuntu.sh
+# RUN chmod +x ./codeql-install-ubuntu.sh
+# RUN ./codeql-install-ubuntu.sh
+
+WORKDIR /azp/
+
+COPY ./start-agent.sh ./
+RUN chmod +x ./start-agent.sh
+
+# Create agent user and set up home directory
+RUN useradd -m -d /home/agent agent
+RUN chown -R agent:agent /azp /home/agent
+
+USER agent
+# Another option is to run the agent as root.
+# ENV AGENT_ALLOW_RUNASROOT="true"
+
+ENTRYPOINT [ "./start-agent.sh" ]

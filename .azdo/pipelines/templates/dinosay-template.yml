@@ -1,0 +1,12 @@
+steps:
+- script: |
+    pip install dinosay
+  displayName: Install Dinos
+
+- script: |
+    dinosay -d tyrannosaurus "who needs arms?"
+  displayName: Tyrannosaurus
+
+- script: |
+    dinosay -d stegosaurus "why run?"
+  displayName: Stegosaurus

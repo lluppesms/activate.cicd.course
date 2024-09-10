@@ -1,0 +1,97 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# 9. Pipeline calling a reusable templates to scan, build, resource, and deploy app to multiple environments
+# ------------------------------------------------------------------------------------------------------------------------
+# This pipelines needs a variable group named "Demo.DadABase"
+# To create this variable groups, customize and run this command in the Azure Cloud Shell.
+#   az pipelines variable-group create 
+#     --organization=https://dev.azure.com/<yourAzDOOrg>/ 
+#     --project='<yourAzDOProject>' 
+#     --name Demo.DadABase 
+#     --variables 
+#         apiKey='<yourapiKey>'
+#         adDomain='yourDomain.onmicrosoft.com'
+#         adTenantId='yourTenantId'
+#         adClientId='yourClientId'
+#         adInstance='yourLoginInstance'
+# Alternatively, you could define these variables in the Azure DevOps Portal on each pipeline, but a variable group is a more repeatable and scriptable way to do it.
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - group: Demo.DadABase
+  - template: vars/var-common.yml
+
+# ----------------------------------------------------------------------------------------------------
+parameters:
+  - name: runGHASScan
+    displayName: Run GHAS Scan
+    type: boolean
+    default: true
+  - name: runMSDevSecOpsScan
+    displayName: Run MS DevSecOps Scan
+    type: boolean
+    default: true
+
+# ----------------------------------------------------------------------------------------------------
+stages:
+  - stage: ScanApplication
+    displayName: Scan Application
+    jobs:
+    - template: templates/template-scan-code-advanced.yml
+      parameters:
+        runMSDevSecOpsScan: ${{ parameters.runMSDevSecOpsScan }}
+        runGHASScan: ${{ parameters.runGHASScan }}
+
+  - stage: BuildApplication
+    displayName: Build Application
+    dependsOn: ScanApplication
+    jobs:
+    - template: templates/template-build-webapp.yml
+
+  - stage: BicepDeployDev
+    displayName: Bicep Dev Deploy
+    dependsOn: BuildApplication
+    condition: succeeded('BuildApplication')
+    jobs:
+    - template: templates/template-deploy-bicep.yml
+      parameters:
+        environmentName: 'DEV'
+        bicepPath: $(bicepPath)
+        bicepFile: $(bicepFileName)
+        parameterFile: $(bicepParameterFileName)
+
+  - stage: AppDeployDev
+    displayName: App Dev Deploy
+    dependsOn: BicepDeployDev
+    condition: succeeded('BicepDeployDev')
+    jobs:
+    - template: templates/template-deploy-webapp.yml
+      parameters:
+        environmentName: 'DEV'
+
+  - stage: BicepDeployQA
+    displayName: Bicep QA Deploy
+    dependsOn: AppDeployDev
+    condition: succeeded('AppDeployDev')
+    jobs:
+    - template: templates/template-deploy-bicep.yml
+      parameters:
+        environmentName: 'QA'
+        bicepPath: $(bicepPath)
+        bicepFile: $(bicepFileName)
+        parameterFile: $(bicepParameterFileName)
+
+  - stage: AppDeployQA
+    displayName: App QA Deploy
+    dependsOn: BicepDeployQA
+    condition: succeeded('BicepDeployQA')
+    jobs:
+    - template: templates/template-deploy-webapp.yml
+      parameters:
+        environmentName: 'QA'

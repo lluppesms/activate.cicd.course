@@ -1,0 +1,20 @@
+steps:
+- script: |
+    echo Skipping Docker steps
+    echo   Agent.OS is $(Agent.OS)
+  displayName: 'Docker Check'
+  condition: ne(variables['Agent.OS'], 'Linux')
+
+- script: |
+    docker pull vanessa/cowsay
+  displayName: 'Docker pull image'
+
+- script: | 
+    docker run vanessa/cowsay run cowthink
+  displayName: 'Docker run image with cowthink'
+  enabled: true
+
+- script: | 
+    docker run vanessa/cowsay run animal vader-koala
+  displayName: 'Docker run image with animal'
+  enabled: true

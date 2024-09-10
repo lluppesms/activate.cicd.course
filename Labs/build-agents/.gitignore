@@ -1,0 +1,7 @@
+aca-runner/scripts/archive/1_create_aca_environment_windows.ps1
+aca-runner/scripts/archive/2_create_containerapp_job_windows.ps1
+aca-runner/scripts/archive/Dockerfile.ubuntu-aca-agent.v1
+aca-runner/scripts/archive/Dockerfile.ubuntu.v1.very-basic-azure-pipelines
+aca-runner/scripts/archive/Dockerfile.ubuntu.v2.testing-upgraded-azure-pipelines
+aca-runner/scripts/archive/Dockerfile.windows-aca-agent
+aca-runner/scripts/archive/start-windows-agent.ps1

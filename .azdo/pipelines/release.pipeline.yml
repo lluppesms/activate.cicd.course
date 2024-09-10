@@ -1,0 +1,27 @@
+name: lab8-release-pipeline
+
+trigger: none # No CI trigger
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildPipelineDefinitionId: 999
+  armArtifactName: 'bashscripts'
+
+steps:
+
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download Pipeline Artifacts'
+  inputs:
+    buildType: 'specific'
+    project: '$(System.TeamProjectId)'
+    definition: '$(buildPipelineDefinitionId)'
+    buildVersionToDownload: 'latest'
+    artifactName: '$(armArtifactName)'
+    targetPath: '$(Pipeline.Workspace)/$(armArtifactName)'
+
+- task: Bash@3
+  inputs:
+    targetType: 'filePath'
+    filePath: '$(Pipeline.Workspace)/$(armArtifactName)/bashscript.example.sh'

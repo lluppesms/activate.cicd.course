@@ -1,0 +1,28 @@
+parameters:
+  name: ''
+  pool: ''
+
+jobs:
+- job: ${{ parameters.name }}
+  pool: ${{ parameters.pool }}
+  steps:
+  - script: echo "Job ${{ parameters.name }} running on ${{ parameters.pool.vmImage }} on OS $(Agent.OS)"
+  - script: |
+      echo Emulating docker run vanessa/cowsay run cowthink...
+      echo "     ____________________________________ "
+      echo "    ( It's a lovely day for some cheese. )"
+      echo "     ------------------------------------ "
+      echo "           \   ^__^                       "
+      echo "            \  (oo)\_______               "
+      echo "               (__)\       )\/\           "
+      echo "                   ||----w |              "
+      echo "                   ||     ||              "
+    displayName: emuCowthink
+    ## Change this to true if you want to run this step on Windows
+    enabled: false
+    ## Uncomment this to make this step run only when NOT on Linux
+    #condition: ne(variables['Agent.OS'], 'Linux')
+
+  - script: docker run vanessa/cowsay run cowthink
+    ## Uncomment this to make this step run only on Linux
+    #condition: eq(variables['Agent.OS'], 'Linux')

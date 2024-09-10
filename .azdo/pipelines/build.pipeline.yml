@@ -1,0 +1,20 @@
+name: lab8-build-pipeline
+
+trigger: none # No CI trigger
+
+pool:
+  vmImage: ubuntu-latest
+  
+steps:
+# Copy script files from a source folder (Labs) to a flat target folder
+- task: CopyFiles@2
+  inputs:
+    contents: '**/Labs/lab8/**/*.sh'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    flattenFolders: true # Optional
+
+# Publish the script files as build artifacts
+- task: PublishPipelineArtifact@1
+  inputs:
+    path: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'bashscripts'

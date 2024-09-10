@@ -1,0 +1,19 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# 6. Pipeline calling a reusable template
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - template: vars/var-common-02.yml
+
+stages:
+- template: templates/06-template-deploy-bicep.yml
+  parameters:
+    bicepPath: 'Labs/Module_10_CICD_Pipelines/bicep'
+    bicepFile: 'storageaccount.bicep'
+    parameterFile: 'storageaccount-variables.bicepparam'

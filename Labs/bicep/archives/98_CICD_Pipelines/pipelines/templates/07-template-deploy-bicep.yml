@@ -1,0 +1,50 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# 6. Reusable template to deploy a Bicep File using variables from a file merged into a parameters file
+# ------------------------------------------------------------------------------------------------------------------------
+parameters:
+  - name: bicepPath
+    default: 'infra/bicep'
+  - name: bicepFile
+    default: 'main.bicep'
+  - name: parameterFile
+    default: 'main.bicepparam' # or 'main.parameters.json'
+
+stages:
+  - stage: DeployStage
+    displayName: Deploy Resources
+    jobs:
+    - job:
+      displayName: Deploy Bicep
+
+      variables:
+        - template: ../vars/var-common-01.yml
+        - name: bicepFilePath
+          value: '$(Build.SourcesDirectory)/${{ parameters.bicepPath }}/${{ parameters.bicepFile }}'
+        - name: parameterFilePath
+          value: '$(Build.SourcesDirectory)/${{ parameters.bicepPath }}/${{ parameters.parameterFile }}'
+
+      steps:
+        - task: qetza.replacetokens.replacetokens-task.replacetokens@6
+          displayName: 'Update Parameter File'
+          inputs:
+            targetFiles: $(parameterFilePath)
+            tokenPrefix: '#{'
+            tokenSuffix: '}#'
+
+        - task: CmdLine@2
+          displayName: Display Parameter File Contents
+          continueOnError: true
+          inputs:
+            script: |
+              echo "Bicep File Name: $(bicepFilePath)"
+              echo "Parameter File Name: $(parameterFilePath)"
+              cat  $(parameterFilePath)
+
+        - task: AzureResourceManagerTemplateDeployment@3
+          displayName: 'Deploy Resources'
+          inputs:
+            azureResourceManagerConnection: $(azureServiceConnection)
+            resourceGroupName: $(resourceGroupName)
+            location: $(location)
+            csmFile: $(bicepFilePath)
+            csmParametersFile: $(parameterFilePath)
