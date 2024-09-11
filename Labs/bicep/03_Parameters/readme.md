@@ -11,7 +11,7 @@ You can compare files in VS Code by clicking on the file you want to compare and
 To begin this lab, open the Terminal and change the directory to the one where the Bicep file is located, using a command similar to the following:
 
 ``` bash
-cd ..\Bicep_04_Bicep_Parameters\
+cd ..\03_Parameters\
 ```
 
 Let's deploy a workspace using the defaults with the same command as in the previous lab, with no parameter overrides.:
