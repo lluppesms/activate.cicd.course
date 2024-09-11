@@ -25,7 +25,6 @@ This workshop will cover a series of labs, in which you will learn to create eff
 * [Lab 1.1 - Setting up an Azure DevOps Project](../setup/1-Create-Azdo-Project.md)
 * [Lab 1.2 - Tooling with Visual Studio Code](../setup/2-Visual-Studio-Code.md)
 * [Lab 1.3 - Import the Class Repository](../setup/3-Clone-Repo.md)
-* [Lab 1.4 - Creating a Custom Build Agent (optional)](../build-agents/desktop-runner/readme.md)
 
 ### Introduction To Bicep
 

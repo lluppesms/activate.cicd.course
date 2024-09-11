@@ -16,9 +16,11 @@ If you need a Build Agent for this class, you can refer to the [Creating a Custo
 
 ## Labs
 
-* [YML Pipeline Labs](./Labs/yml/readme.md)
+* [Clone the Class Repository](./Labs/setup/3-Clone-Repo.md)
 
 * [Bicep Labs](./Labs/bicep/readme.md)
+
+* [YML Pipeline Labs](./Labs/yml/readme.md)
 
 ## Workshop Origins
 
