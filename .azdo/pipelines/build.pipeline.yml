@@ -9,7 +9,7 @@ steps:
 # Copy script files from a source folder (Labs) to a flat target folder
 - task: CopyFiles@2
   inputs:
-    contents: '**/Labs/yml/08_CICD/**/*.sh'
+    contents: '**/Labs/yml/08_Split_CI_CD/**/*.sh'
     targetFolder: '$(Build.ArtifactStagingDirectory)'
     flattenFolders: true # Optional
 

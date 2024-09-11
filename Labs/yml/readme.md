@@ -81,9 +81,9 @@ This workshop will cover a series of labs, in which you will learn to create eff
 
 ### Using Resources - Splitting CI and CD
 
-* [Lab 8 - Splitting CI and CD](./08_CICD/readme.md)
-  * [Creating a Build pipeline and saving the artifacts](./08_CICD/readme.md#exercise-81-build-pipelines-and-artifacts)
-  * [Creating a Release Pipeline using a pre-built artifact](./08_CICD/readme.md#exercise-82-working-with-build-artifacts)
+* [Lab 8 - Splitting CI and CD](./08_Split_CI_CD/readme.md)
+  * [Creating a Build pipeline and saving the artifacts](./08_Split_CI_CD/readme.md#exercise-81-build-pipelines-and-artifacts)
+  * [Creating a Release Pipeline using a pre-built artifact](./08_Split_CI_CD/readme.md#exercise-82-working-with-build-artifacts)
 
 ---
 

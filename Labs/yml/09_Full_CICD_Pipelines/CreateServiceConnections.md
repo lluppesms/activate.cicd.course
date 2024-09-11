@@ -14,23 +14,23 @@ Before you begin this step, create a Service Principal and Client Secret, and re
 
 **Step 1:** Go to the project settings page:
 
-![Step 1](assets/images/ServiceConnection-1.jpg)
+![Step 1](img/ServiceConnection-1.jpg)
 
 **Step 2:** Select Service Connections:
 
-![Step 2](assets/images/ServiceConnection-2.jpg)
+![Step 2](img/ServiceConnection-2.jpg)
 
 **Step 3:** Add new Service Connection:
 
-![Step 3](assets/images/ServiceConnection-3.jpg)
+![Step 3](img/ServiceConnection-3.jpg)
 
 **Step 4:** Select Azure Resource Manager
 
-![Step 4](assets/images/ServiceConnection-6.jpg)
+![Step 4](img/ServiceConnection-6.jpg)
 
 **Step 5:** Select the Service principal (manual) option.
 
-![Step 5](assets/images/ServiceConnection-7.jpg)
+![Step 5](img/ServiceConnection-7.jpg)
 
 **Step 6:** For this step, things that are needed include the Azure Subscription name and Id, the Azure AD Service Principal Client Id and Tenant Id, and the Client Secret that was created in the previous steps.
 
@@ -40,7 +40,7 @@ In the image below, the "Service Principal Id" is the Azure AD Service Principal
 
 Fill in the info and click on the "Verify" button to validate the connection info, then click Save.
 
-![Step 6](assets/images/ServiceConnection-8.jpg)
+![Step 6](img/ServiceConnection-8.jpg)
 
 ---
 
@@ -50,15 +50,15 @@ If you need to access resources in a GitHub repository, you will need to create 
 
 **Step 1:** Go to the project settings page:
 
-![Step 1](assets/images/ServiceConnection-1.jpg)
+![Step 1](img/ServiceConnection-1.jpg)
 
 **Step 2:** Select Service Connections:
 
-![Step 2](assets/images/ServiceConnection-2.jpg)
+![Step 2](img/ServiceConnection-2.jpg)
 
 **Step 3:** Add new Service Connection:
 
-![Step 3](assets/images/ServiceConnection-3.jpg)
+![Step 3](img/ServiceConnection-3.jpg)
 
 ---
 
@@ -66,11 +66,11 @@ If you need to access resources in a GitHub repository, you will need to create 
 
 **Step 4:** Select GitHub
 
-![Step 4](assets/images/ServiceConnection-4.jpg)
+![Step 4](img/ServiceConnection-4.jpg)
 
 **Step 5:** Authenticate GitHub using a PAT token. (For ease of use, it is recommended that the GitHub service connection name be the same as the GitHub account is being referenced.)
 
-![Step 5](assets/images/ServiceConnection-5.jpg)
+![Step 5](img/ServiceConnection-5.jpg)
 
 
 ---

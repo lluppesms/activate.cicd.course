@@ -488,6 +488,77 @@ Example Output:
 
 Go ahead and try this with one of our pipelines and explore the additional output that is generated.
 
+---
+
+## Exercise 5.10: Viewing All Variables
+
+To assist with troubleshooting, you may want to see all of the variables that are available to you.  Add this step in your previous pipeline to see what variables are available:
+
+```yml
+- task: Bash@3
+  displayName: 'Display Variables'
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Display All Environment Variables:"
+      printenv | sort
+  continueOnError: true
+```
+
+---
+
+## Exercise 5.11: (Example IO) Variable Substitution
+
+The real power of variables is in their ability to be substituted into other values like in your Bicep parameters file.  This can be done in the pipeline code using a custom task (an extension that has to be installed by your Org Admin).
+
+For example, if you had the following parameter file:
+
+``` bicep
+using './main.bicep'
+param appName = '#{appName}#'
+param environmentCode = '#{environmentNameLower}#'
+```
+
+And added this task in your YML pipeline:
+
+```yml
+- task: qetza.replacetokens.replacetokens-task.replacetokens@6
+  displayName: 'Update Parameter File'
+  inputs:
+    targetFiles: $(parameterFilePath)
+    tokenPrefix: '#{'
+    tokenSuffix: '}#'
+```
+
+This would replace the `#{appName}#` and `#{environmentNameLower}#` with the values of those variables in the pipeline. In that way you could use the same parameter file for DEV/QA/PROD and know that it was deployed EXACTLY the same way, just with different values.  This would produce a parameter file that looked like this in dev:
+
+``` bicep
+using './main.bicep'
+param appName = 'myappname-dev'
+param environmentCode = 'dev'
+```
+
+ And like this in QA:
+
+``` bicep
+using './main.bicep'
+param appName = 'myappname-qa'
+param environmentCode = 'qa'
+```
+
+If you wanted to display the parameter file in the logs after the substitution, you could add a step like this using the `cat` command (on a Linux build agent).  Note that any variables marked as secrets will not be displayed in the logs, they will just show an `*****` for the value.
+
+```yml
+- task: CmdLine@2
+displayName: Display Parameter File Contents
+continueOnError: true
+inputs:
+  script: |
+    echo "Bicep File Name: $(bicepFilePath)"
+    echo "Parameter File Name: $(parameterFilePath)"
+    cat  $(parameterFilePath)
+```
+
 <!-- ------------------------------------------------------------------------------------------ -->
 ---
 

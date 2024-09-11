@@ -8,27 +8,27 @@ For multi-stage deployments (i.e. DEV/QA/PROD), a DevOps Environment should be s
 
 **Step 1:** Go to the project environments page and select New environment:
 
-![Step 1](assets/images/DevOpsEnvironment-1.jpg)
+![Step 1](img/DevOpsEnvironment-1.jpg)
 
 **Step 2:** Enter the name of the new environment:
 
-![Step 2](assets/images/DevOpsEnvironment-2.jpg)
+![Step 2](img/DevOpsEnvironment-2.jpg)
 
 **Step 3:** To add an approver for an environment, select that environment, click on the "More" ellipsis, and select "Approvals and checks"
 
-![Step 3](assets/images/DevOpsEnvironment-3.jpg)
+![Step 3](img/DevOpsEnvironment-3.jpg)
 
 **Step 4:** Click on the plus sign to add new checks:
 
-![Step 4](assets/images/DevOpsEnvironment-4.jpg)
+![Step 4](img/DevOpsEnvironment-4.jpg)
 
 **Step 5:** Select the "Approvals" check from the list:
 
-![Step 5](assets/images/DevOpsEnvironment-5.jpg)
+![Step 5](img/DevOpsEnvironment-5.jpg)
 
 **Step 6:** Add the authorized approvers to the list and click "Create":
 
-![Step 6](assets/images/DevOpsEnvironment-6.jpg)
+![Step 6](img/DevOpsEnvironment-6.jpg)
 
 ---
 

@@ -101,4 +101,4 @@ This is a great way to create consistent repeatable maintainable pipelines that 
 
 This completes Lab 7.
 
-[Next Lab](../08_CICD/readme.md) | [Previous Lab](../06_Environments/readme.md) | [Table of Contents](./readme.md)
+[Next Lab](../08_Split_CI_CD/readme.md) | [Previous Lab](../06_Environments/readme.md) | [Table of Contents](./readme.md)

@@ -1,18 +1,12 @@
-# Module 10: Creating Pipelines to Automat Deployments
+# Example Pipelines to Automate Deployments
 
-## Microsoft Learn Labs
+## Examples
 
-1. Deploy Azure resources by using Bicep and Azure Pipelines - [https://learn.microsoft.com/en-au/training/modules/build-first-bicep-deployment-pipeline-using-azure-pipelines/](https://learn.microsoft.com/en-au/training/modules/build-first-bicep-deployment-pipeline-using-azure-pipelines/)
-
-2. Deploy Azure resources by using Bicep and GitHub Actions - [https://learn.microsoft.com/en-au/training/modules/build-first-bicep-deployment-pipeline-using-github-actions/](https://learn.microsoft.com/en-au/training/modules/build-first-bicep-deployment-pipeline-using-github-actions/)
-
-## Course Labs
-
-In this lab, we will walk through these examples in ascending order, building on the concepts outlined for each pipeline.
+In this lab, we will see examples in ascending order, building on the concepts outlined in the course for each pipeline.
 
 | File | Description |
 | -- | -- |
-| 0simplest-pipeline | The simplest YML file example with hard-coded values |
+| 01-simplest-pipeline | The simplest YML file example with hard-coded values |
 | 02-pipeline-with-parms | This YML file uses user parameters to deploy resources |
 | 03-pipeline-with-variable-file | This pipeline shows how to put variables in a YML var file |
 | 04-pipeline-with-bicep-parm-file | This pipeline shows how to use a Bicep Parameter file so that your YML is not hard-coded with variable names |
@@ -31,3 +25,10 @@ For more info on setting up pipelines and environments, see:
 - [Create Azure DevOps Environments](./CreateDevOpsEnvironments.md)
 - [Create Azure DevOps Variable Groups](./CreateDevOpsVariableGroups.md)
 - [Create New Pipelines](./CreateNewPipeline.md)
+
+## Additional Microsoft Learn Labs
+
+1. Deploy Azure resources by using Bicep and Azure Pipelines - [https://learn.microsoft.com/en-au/training/modules/build-first-bicep-deployment-pipeline-using-azure-pipelines/](https://learn.microsoft.com/en-au/training/modules/build-first-bicep-deployment-pipeline-using-azure-pipelines/)
+
+2. Deploy Azure resources by using Bicep and GitHub Actions - [https://learn.microsoft.com/en-au/training/modules/build-first-bicep-deployment-pipeline-using-github-actions/](https://learn.microsoft.com/en-au/training/modules/build-first-bicep-deployment-pipeline-using-github-actions/)
+

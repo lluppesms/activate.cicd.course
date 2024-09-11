@@ -7,7 +7,7 @@ az ts create --name BasicStorageAccount --template-file storage-module.bicep --v
 $tsId = az ts show --name BasicStorageAccount --resource-group rg_demo --version "1.0" --query "id"
 
 ## Show all the details and versions for this spec
-##   NiteL Get the tsId then remove the last part of the id to do this query (i.e. /versions/1.0)
+##  Note: Get the tsId then remove the last part of the id to do this query (i.e. /versions/1.0)
 az ts show --template-spec /subscriptions/xxxxxxxx-xxxx-xxxx-xxxxxxxx/resourceGroups/rg_demo/providers/Microsoft.Resources/templateSpecs/BasicStorageAccount --resource-group rg_demo
 
 ## Deploy using a template spec with parameters
@@ -20,4 +20,3 @@ az deployment group create --parameters storage-module.parameters.json --templat
 
 ## Deploy storage using Tech Spec Bicep and parameter file
 az deployment group create --template-file storageAccount-templated.bicep --parameters storageAccount-templated.bicepparam --name template.spec.03 --resource-group rg_demo
-
