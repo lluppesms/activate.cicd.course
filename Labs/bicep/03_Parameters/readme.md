@@ -17,8 +17,9 @@ cd ..\03_Parameters\
 Let's deploy a workspace using the defaults with the same command as in the previous lab, with no parameter overrides.:
 
 ``` bash
+$resourceGroupName="rg_demo"
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep
 
 ```
@@ -29,7 +30,7 @@ We can deploy a second workspace by simply overriding the logAnalyticsWorkspaceN
 
 ``` bash
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep `
  --parameters logAnalyticsWorkspaceName=logAnalytics02
  
@@ -69,7 +70,7 @@ Let's deploy it again and override the logAnalyticsWorkspaceName parameter AND t
 
 ``` bash
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep `
  --parameters logAnalyticsWorkspaceName=logAnalytics02 skuName=PerGB2018
 ```
@@ -98,7 +99,7 @@ Edit the parameter file to have values of your choosing, then let's deploy a res
 
 ``` bash
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep `
  --parameters loganalytics.parameters.json
 ```
@@ -121,7 +122,7 @@ You can deploy using the Bicep Parameter file in exactly the same way as the ARM
 
 ``` bash
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep `
  --parameters loganalytics.bicepparam
 ```
@@ -136,7 +137,7 @@ Let's deploy the template again, but this time we will override the retention pe
 
 ``` bash
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep `
  --parameters loganalytics.bicepparam retentionInDays=45
 ```
@@ -154,8 +155,8 @@ Here is an example of what the output looks like when you run the command with t
 Let's try it now:
 
 ``` bash
-az deployment group create --what-if `
- --resource-group rg_demo `
+az deployment group create `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep `
  --parameters loganalytics.bicepparam retentionInDays=60
 ```

@@ -52,8 +52,9 @@ az group show --resource-group rg_demo
 Let's begin by deploying the simplest bicep file.  Open the file `simplest-loganalytics.bicep` in VS Code and review the contents.  This file will create a Log Analytics Workspace in the resource group you created in the previous step. When you are ready, run the following command in the terminal window to deploy the bicep file:
 
 ``` bash
+$resourceGroupName="rg_demo"
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file simplest-loganalytics.bicep
 
 ```
@@ -63,8 +64,9 @@ Open the Azure portal and find your resource group and your new Log Analytics Wo
 Once you have looked at the resource, let's practice cleaning up.  Run the following command to delete the workspace. Note the `--force` parameter which will do a forced purge (no recovery possible) which will let you re-use this name in the future.
 
 ``` bash
+$resourceGroupName="rg_demo"
 az monitor log-analytics workspace delete `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --workspace-name logAnalytics01 `
  --force
  

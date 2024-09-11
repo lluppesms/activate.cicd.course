@@ -73,8 +73,9 @@ az bicep decompile -f exportedResource.json
 Go ahead and make a small change like changing the name parameter default, then deploy a new resource based on your imported resource definition back to Azure:
 
 ``` bash
+$resourceGroupName="rg_demo"
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file exportedResource.bicep
 ```
 

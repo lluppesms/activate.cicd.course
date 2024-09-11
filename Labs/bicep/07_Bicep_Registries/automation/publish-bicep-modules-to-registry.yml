@@ -1,0 +1,129 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline to deploy bicep file from this repository to an Azure Container Registry 
+# ------------------------------------------------------------------------------------------------------------------------
+# This pipeline needs five variables defined in AzDO:
+#  subscriptionName:   'your subscriptionName'
+#  registryName:       'yourContainerRegistryName'
+#  acrPrincipalId:     'yourServicePrincipalId'      (the service principal object id)
+#  acrPrincipalSecret: 'yourServicePrincipalSecret'  (the client secret value)
+#  acrTenantId:        'yourTenantId'                (the Azure AD Tenant Id)
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - '/Bicep/Bicep/*.bicep'
+    exclude:
+    - '/Bicep/Bicep/*main*.bicep' # only include modules
+ 
+pr: none
+ 
+pool:
+  vmImage: ubuntu-latest
+
+# ------------------------------------------------------------------------------------------------------------------------
+parameters:
+  - name: runScan
+    displayName: Run Scan
+    type: boolean
+    default: true
+  - name: publishModules
+    displayName: Publish to Container Registry
+    type: boolean
+    default: true
+
+# ------------------------------------------------------------------------------------------------------------------------
+variables:
+  modulePrefix: 'bicep/'
+  runScan: ${{ parameters.runScan }}
+  publishModules: ${{ parameters.publishModules }}
+
+# ------------------------------------------------------------------------------------------------------------------------
+steps:
+- script: az login --service-principal -u $(acrPrincipalId) -p $(acrPrincipalSecret) --tenant $(acrTenantId)
+  displayName: 'az login'
+
+- script: git diff-tree --no-commit-id --name-only --diff-filter=ad -r -m $(Build.SourceVersion) 
+  displayName: 'Show Committed Files'
+  continueOnError: true
+
+- task: UseDotNet@2
+  condition: eq(variables['runScan'], 'true') 
+  displayName: 'Use dotnet 8.0'
+  inputs:
+    version: 8.0.x
+
+- task: MicrosoftSecurityDevOps@1
+  condition: eq(variables['runScan'], 'true') 
+  displayName: 'Run Microsoft Security DevOps'
+  continueOnError: true
+
+# This script will scan your Bicep files and publish them to your container registry if they are new or updated
+- task: AzureCLI@2
+  condition: eq(variables['publishModules'], 'true') 
+  displayName: 'Publish/Update Modules to Registry'
+  inputs:
+    azureSubscription: $(subscriptionName)
+    scriptType: 'pscore'
+    scriptLocation: inlineScript
+    inlineScript: |
+      # az acr login -n $(registryName)
+      $moduleCount = 0
+      $modulesAdded = 0
+      $modulesUpdated = 0
+      $version = (Get-Date -f 'yyyy-MM-dd') + ".$env:BUILD_BUILDID"
+      Write-Host "Publishing new and updated modules as version $version"
+      Write-Host $modulePrefix
+      Write-Host "Updating Registry: $(registryName)"
+      Write-Host "Scanning for modulePrefix: $(modulePrefix)"
+      Write-Host "-------------------------------------------------------------"
+      Write-Host "List of modules currently in the registry:"
+      Write-Host "az acr repository list --name $(registryName) --query ''[?contains(@, '${modulePrefix}')]'' -o tsv"
+      az acr repository list --name $(registryName) --query "[?contains(@, '${modulePrefix}')]" -o tsv
+      Write-Host "-------------------------------------------------------------"
+      Write-Host "Searching for new modules to add..."
+      $publishedModules = $(az acr repository list --name $(registryName) --query "[?contains(@, '${modulePrefix}')]" -o tsv)
+      Get-ChildItem -Recurse -Path ./Bicep/Bicep/*.bicep | Foreach-Object {
+        $moduleCount += 1
+        $filename = ($_ | Resolve-Path -Relative) -replace "^./" -replace '\..*'
+        $lowerfilename = $filename.ToLower().replace("bicep/", "").replace("Bicep/", "").replace("modules/", "")
+        Write-Host "-- Checking for existing registry entry: $lowerfileName"
+        If (-not ($publishedModules ?? @()).Contains(("bicep/" + $lowerfilename))) {
+          $image = "bicep/$lowerfilename`:$version"
+          Write-Host "  *** $lowerfilename doesn't exist - adding Image $image"
+          $modulesAdded += 1
+          Write-Host "    az bicep publish --file $_ --target br:$(registryName).azurecr.io/bicep/${lowerfilename}:${version}"
+          az bicep publish --file $_ --target br:$(registryName).azurecr.io/bicep/${lowerfilename}:${version}
+          Write-Host "    az acr import --name $(registryName) --source $(registryName).azurecr.io/bicep/${lowerfilename}:${version} --image bicep/${lowerfilename}:LATEST --force"
+          az acr import --name $(registryName) --source $(registryName).azurecr.io/bicep/${lowerfilename}:${version} --image bicep/${lowerfilename}:LATEST --force
+          Write-Host "    Marking module $image as read-only"
+          Write-Host "    az acr repository update --name $(registryName) --image $image --write-enabled false"
+          az acr repository update --name $(registryName) --image $image --write-enabled false
+        }
+      }
+
+      Write-Host "-------------------------------------------------------------"
+      Write-Host "Searching commit for existing modules to update for commit $(Build.SourceVersion)..."
+      git diff-tree --no-commit-id --name-only --diff-filter=ad -r -m $(Build.SourceVersion) | Where-Object {$_.EndsWith('.bicep')} | Foreach-Object {
+        $moduleName = ($_ | Resolve-Path -Relative) -replace "^./" -replace '\..*'
+        If (-not ($moduleName ?? @()).Contains(('main.bicep'))) {
+          $lowerfilename = $moduleName.ToLower().replace("bicep/", "").replace("modules/", "")
+          Write-Host "  *** Updating existing module $lowerfilename with version $version"
+          $modulesUpdated += 1
+          Write-Host "    az bicep publish --file $_ --target br:$(registryName).azurecr.io/bicep/${lowerfilename}:${version}"
+          az bicep publish --file $_ --target br:$(registryName).azurecr.io/bicep/${lowerfilename}:${version}
+          Write-Host "    az acr import --name $(registryName) --source $(registryName).azurecr.io/bicep/${lowerfilename}:${version} --image bicep/${lowerfilename}:LATEST --force"
+          az acr import --name $(registryName) --source $(registryName).azurecr.io/bicep/${lowerfilename}:${version} --image bicep/${lowerfilename}:LATEST --force
+          Write-Host "    Marking module ${lowerfilename}:${version} as read-only"
+          Write-Host "    az acr repository update --name $(registryName) --image bicep/${lowerfilename}:${version} --write-enabled false"
+          az acr repository update --name $(registryName) --image bicep/${lowerfilename}:${version} --write-enabled false
+        }
+      }
+      Write-Host "-------------------------------------------------------------"
+      Write-Host "Total Modules in repository:   $moduleCount" 
+      Write-Host "  Modules added to registry:   $modulesAdded"
+      Write-Host "  Modules updated in registry: $modulesUpdated"
+      

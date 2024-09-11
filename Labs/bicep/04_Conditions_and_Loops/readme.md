@@ -25,8 +25,9 @@ Your Bicep file should now looks like this:
 Try deploying the file with the `deployResource` parameter set to false, so it will NOT deploy a resource:
 
 ``` bash
+$resourceGroupName="rg_demo"
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep `
  --parameters deployResource=false
 ```
@@ -35,7 +36,7 @@ Then deploy it again taking the defaults, which would deploy an actual resource:
 
 ``` bash
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep
 ```
 
@@ -95,7 +96,7 @@ Let's deploy this and create TWO resources by overriding the default loop count:
 
 ``` bash
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file loganalytics.bicep `
  --parameters loopCount=2
 ```

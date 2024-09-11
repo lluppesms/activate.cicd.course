@@ -91,9 +91,10 @@ For more info, see [User Defined Data Types (Microsoft Learn)](https://learn.mic
 All of these resources are in this folder.  Feel free to explore them and to deploy the main.bicep file to see how they all work together.
 
 ``` bash
+$resourceGroupName="rg_demo"
 az deployment group create `
  --name bicep.tips.01 `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file main.bicep
 
 ```

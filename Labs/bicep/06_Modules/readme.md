@@ -39,8 +39,9 @@ In addition, when you deploy a Bicep file using the `az deployment group create`
 Let's go ahead and deploy this file using the defaults as we've done in the previous lab:
 
 ``` bash
+$resourceGroupName="rg_demo"
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file main-local-module.bicep
 ```
 
@@ -55,7 +56,7 @@ Now let's deploy this file again using a parameter file and also a `--name` para
 ``` bash
 az deployment group create `
  --name bicep.local.deploy.01 `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file main-local-module.bicep `
  --parameters main-local-module.bicepparam
 ```
@@ -121,7 +122,7 @@ Let's deploy this file again using the same command as last time, except a sligh
 ``` bash
 az deployment group create `
  --name bicep.local.deploy.02 `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file main-local-module.bicep `
  --parameters main-local-module.bicepparam
 ```
@@ -159,7 +160,7 @@ Deploy the newly defined Bicep file using the following command with the same pa
 ``` bash
 az deployment group create `
  --name bicep.public.deploy.02 `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file main-public-module.bicep `
  --parameters main-public-module.bicepparam
 

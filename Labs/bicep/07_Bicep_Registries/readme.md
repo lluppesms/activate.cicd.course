@@ -7,8 +7,9 @@ In this lab we will walk through the process of creating our own private registr
 Run the following command to provision an Azure Container Registry in your subscription.  Be sure to replace `yourRegistryName` with a unique name for your registry, as it must be a globally unique name, something like `XXXbicepregistry`, where XXX are your initials.
 
 ```bash
+$resourceGroupName="rg_demo"
 az deployment group create `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file containerregistry.bicep `
  --parameters name=yourRegistryName
 ```
@@ -77,7 +78,7 @@ Now we can deploy from our private registry in the exact same way we did from th
 ``` bash
 az deployment group create `
  --name bicep.private.deploy.01 `
- --resource-group rg_demo `
+ --resource-group $resourceGroupName `
  --template-file main-private-module.bicep `
  --parameters main-private-module.bicepparam
 
@@ -86,6 +87,10 @@ az deployment group create `
 When it completes, review your resources in the portal and you should see the Log Analytics Workspace and Application Insights resources that were created by the modules.
 
 <!-- ------------------------------------------------------------------------------------------ -->
+---
+
+To learn more about how to setup an automated CI/CD publishing routine for pushing Bicep files into the ACR each time the source changes, see: [this document](./automation/readme.md).
+
 ---
 
 This completes this lab.
