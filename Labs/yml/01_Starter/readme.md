@@ -80,7 +80,7 @@ What you can see above is a very simple pipeline that contains only a few pieces
 
 Our complete pipeline is defined in YAML. To learn the basics of YAML, see [Learn YAML in Y Minutes](https://learnxinyminutes.com/docs/yaml/). Please keep in mind that Azure Pipelines does not support all YAML features today. Unsupported features include anchors, complex keys, and sets.
 
-Change the trigger to be none so that it only runs on demand during our labs.
+For each of the new pipelines we create, remember to change the trigger to be none so that it only runs on demand during our labs.
 
 ```yml
 trigger: none
@@ -90,7 +90,7 @@ If you are using the built-in Microsoft hosted pools for this class, you can jus
 
 ```yml
 pool:
-  name: ubuntu-latest
+  vmimage: ubuntu-latest
 ```
 
 ---
@@ -121,7 +121,7 @@ So -- let's rename the pipeline first, and put it into a pipeline folder with yo
 ![More Options](img/052_more_options_button.png)
 
 * Select `Rename/move`
-* Call it `<yourName> Basic Pipeline with Template`
+* Call it `<yourName> Basic Pipeline`
 * Change the folder to `<yourName>`
 
 ![rename pipeline](img/054_rename_pipeline.png)

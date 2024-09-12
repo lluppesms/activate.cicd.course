@@ -53,6 +53,12 @@ To achieve this we can now add the following line to the end of our pipeline:
 - template: /.azdo/pipelines/templates/cowsay-template.yml
 ```
 
+For each of the new pipelines we create, remember to change the trigger to be none so that it only runs on demand during our labs.
+
+```yml
+trigger: none
+```
+
 > Note: If you are in a very restricted lab environment that does not allow Docker installs, you can use the `cowsay-emulated-template.yml` in this example to emulated the same behavior.
 
 Our new pipeline looks pretty similar to what we did in the previous labs, with the difference that we are now referencing to another file that contains additional parts used by our pipeline:

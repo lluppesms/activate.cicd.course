@@ -24,7 +24,7 @@ For multi-stage deployments (i.e. DEV/QA/PROD), a DevOps Environment should be s
 
 ![Step 1](img/DevOpsEnvironment-1.jpg)
 
-**Step 2:** Enter the name of the new environment:
+**Step 2:** Enter the name of the new environment (which should be `<yourname>-TEST`):
 
 ![Step 2](img/DevOpsEnvironment-2.jpg)
 
@@ -45,6 +45,8 @@ For multi-stage deployments (i.e. DEV/QA/PROD), a DevOps Environment should be s
 ![Step 6](img/DevOpsEnvironment-6.jpg)
 
 ---
+
+> Note: The *first* person to create the environment will be the `creator` and they will have a full rights to administer that environment.  Other users can use and read that environment, but only the creator can modify it by default.  If you want to create an environment named `TEST` and share that environment, you would have to change the security on the environment to allow Contributors or Project Admins to `Administer` this environment.
 
 The environment should be ready to use now! Any pipelines that use this environment will require the specified approvers to approve the deployment before the job can continue.
 
@@ -115,7 +117,7 @@ Add this step that calls the deploy-bicep-template right after the BuildApplicat
   jobs:
   - template: /.azdo/pipelines/templates/deploy-bicep-template.yml
     parameters:
-      environmentName: 'DEV'
+      environmentName: '<yourName>-DEV'
       bicepPath: $(bicepPath)
       bicepFile: $(bicepFileName)
       parameterFile: $(bicepParameterFileName)
@@ -136,7 +138,7 @@ Add this step after the BicepDeployDev step with that step as a dependency.  Not
   jobs:
   - template: /.azdo/pipelines/templates/deploy-app-template.yml
     parameters:
-      environmentName: 'DEV'
+      environmentName: '<yourName>-DEV'
 
 ```
 
@@ -152,7 +154,7 @@ Once you have the DEV environment working, you can add the QA and PROD environme
   jobs:
   - template: /.azdo/pipelines/templates/deploy-bicep-template.yml
     parameters:
-      environmentName: 'QA'
+      environmentName: '<yourName>-QA'
       bicepPath: $(bicepPath)
       bicepFile: $(bicepFileName)
       parameterFile: $(bicepParameterFileName)
@@ -164,7 +166,7 @@ Once you have the DEV environment working, you can add the QA and PROD environme
   jobs:
   - template: /.azdo/pipelines/templates/deploy-app-template.yml
     parameters:
-      environmentName: 'QA'
+      environmentName: '<yourName>-QA'
 
 - stage: BicepDeployProd
   displayName: Bicep Prod Deploy
@@ -173,7 +175,7 @@ Once you have the DEV environment working, you can add the QA and PROD environme
   jobs:
   - template: /.azdo/pipelines/templates/deploy-bicep-template.yml
     parameters:
-      environmentName: 'Prod'
+      environmentName: '<yourName>-Prod'
       bicepPath: $(bicepPath)
       bicepFile: $(bicepFileName)
       parameterFile: $(bicepParameterFileName)
@@ -185,7 +187,7 @@ Once you have the DEV environment working, you can add the QA and PROD environme
   jobs:
   - template: /.azdo/pipelines/templates/deploy-app-template.yml
     parameters:
-      environmentName: 'Prod'
+      environmentName: '<yourName>-Prod'
 
 ```
 

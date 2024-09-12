@@ -75,7 +75,7 @@ resources:
   repositories:
     - repository: template.library        # the internal alias for the repo in this pipeline
       type: git
-      name: yml.course/azdo.cicd.library  # the name of your project/repository
+      name: <yourAzDOProject>/azdo.cicd.library  # the name of your project/repository
       ref: main                           # the branch to use
 
 ```

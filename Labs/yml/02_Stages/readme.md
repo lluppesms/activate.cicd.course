@@ -165,7 +165,7 @@ Now that we had a quick intro into jobs we'll now continue with stages.
 > Every pipeline has at least one stage even if you do not explicitly define it. Stages may be arranged into a dependency graph: "run this stage before that one".  
 > See [Stages, Dependencies, & Conditions](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/stages) to learn more.
 
-A stage can contain one or more jobs. Here is an example how this could look like:
+A stage can contain one or more jobs. Here is an example of what this could look like:
 
 ```yml
 stages:
