@@ -1,0 +1,94 @@
+# ----------------------------------------------------------------------------------------------------
+# Publish Bicep Template
+# ----------------------------------------------------------------------------------------------------
+parameters:
+- name: registryName
+  default: ''
+- name: modulePrefix
+  default: 'bicep/'
+- name: environmentName
+  default: 'DEV'
+- name: serviceConnectionName
+  default: ''
+
+# ----------------------------------------------------------------------------------------------------
+stages:
+  - stage: PublishBicep
+    displayName: Publish Bicep
+    jobs:
+    - deployment: PublishBicepDeployment
+      displayName: Initialize Publish Bicep
+      environment: '${{ parameters.environmentName }}'
+
+    - job: PublishBicepJob
+      displayName: Publish Bicep Job 
+      variables:
+        - name: logFileName
+          value: $(Build.ArtifactStagingDirectory)/Output/PublishBicepOutput_$(Build.BuildId).log
+
+      steps:
+      - checkout: self
+        clean: true
+        fetchDepth: 0
+        persistCredentials: true
+
+      - bash: |          
+          echo "BuildId=$(Build.BuildId)"
+          echo "SourceVersion=$(Build.SourceVersion)"
+          echo "Commit Message=$(Build.SourceVersionMessage)"
+
+          echo "Directory of pipeline workspace:"
+          tree -L 4 $(Pipeline.Workspace)
+        displayName: 'Display Variables and Files'
+        continueOnError: true
+
+      - task: PowerShell@2
+        displayName: Make Output Folder
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.ArtifactStagingDirectory)
+            md Output
+            cd Output
+            echo "Build.BuildId=$(Build.BuildId)" > $(logFileName)
+            echo "Build.SourceVersion=$(Build.SourceVersion)" >> $(logFileName)
+            echo "Build.SourceVersionMessage=$(Build.SourceVersionMessage)" >> $(logFileName)
+            cd ..
+          errorActionPreference: 'continue'
+          failOnStderr: false
+
+      - task: PowerShell@2
+        displayName: List Committed Files
+        inputs:
+          targetType: 'inline'
+          script: |
+            git diff-tree --no-commit-id --name-only -r -m $(Build.SourceVersion) 
+            echo "-------------------------------------------------------------" >> $(logFileName)
+            echo "Files in this commit:" >> $(logFileName)
+            echo "git diff-tree --no-commit-id --name-only -r -m $(Build.SourceVersion)" >> $(logFileName)
+            git diff-tree --no-commit-id --name-only -r -m $(Build.SourceVersion) >> $(logFileName)
+            echo "-------------------------------------------------------------" >> $(logFileName)
+          errorActionPreference: 'continue'
+          failOnStderr: false
+
+      - task: AzureCLI@2
+        displayName: 'Publish/Update Modules to Registry'
+        inputs:
+          azureSubscription: $(serviceConnectionName)
+          azurePowerShellVersion: 'LatestVersion'
+          scriptType: 'pscore'
+          scriptPath: scripts/publishBicepRegistryChanges.ps1
+          arguments: ' -registryName $(registryName) -modulePrefix $(modulePrefix) -sourceVersion $(Build.SourceVersion) -buildId $(Build.BuildId) -logFile $(logFileName)'
+
+      - bash: |          
+          echo "Directory of pipeline workspace:"
+          tree -L 4 $(Pipeline.Workspace)
+        displayName: 'Display Files'
+        continueOnError: true
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Output Artifacts'
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Output'
+          ArtifactName: 'Output'
+        continueOnError: true

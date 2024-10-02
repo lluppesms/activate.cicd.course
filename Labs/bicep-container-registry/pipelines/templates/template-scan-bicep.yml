@@ -1,0 +1,56 @@
+# ----------------------------------------------------------------------------------------------------
+# Code Scanning Template
+# ----------------------------------------------------------------------------------------------------
+# Microsoft Secure DevOps Scan
+# To enable this, you must add Azure DevOps Extension to your Azure DevOps Organization
+# See https://marketplace.visualstudio.com/items?itemName=ms-securitydevops.microsoft-security-devops-azdevops
+# ----------------------------------------------------------------------------------------------------
+parameters:
+- name: runScan
+  default: 'true'
+- name: environmentName
+  default: 'DEV'
+- name: directoryToScan
+  default: ''
+- name: continueOnScanError
+  default: 'true'
+
+# ----------------------------------------------------------------------------------------------------
+stages:
+  - stage: ScanStage
+    displayName: Scan Code
+    jobs:
+    - deployment: CodeScanDeployment
+      displayName: Initialize Code Scans 
+      environment: '${{ parameters.environmentName }}'
+
+    - ${{ if eq(lower(parameters.runScan), 'true') }}:
+      - job: DevSecOpsScanJob
+        displayName: DevSecOps Scan Job 
+        steps:
+        - task: UseDotNet@2
+          displayName: 'Use dotnet 8.0'
+          inputs:
+            version: 8.0.x
+
+        - ${{ if eq(parameters.directoryToScan, '') }}:
+          - task: MicrosoftSecurityDevOps@1
+            displayName: Scan All Directories
+            continueOnError: ${{ eq(lower(parameters.continueOnScanError), 'true') }}
+
+        - ${{ if ne(parameters.directoryToScan, '') }}:
+          - task: MicrosoftSecurityDevOps@1
+            displayName: Scan Bicep Directory
+            inputs:
+              categories: IaC
+              tools: templateanalyzer,IaCFileScanner
+            # env:
+            #   gdn_run_workingdirectory: ${{ parameters.directoryToScan }}
+            continueOnError: ${{ eq(lower(parameters.continueOnScanError), 'true') }}
+
+        - task: PublishBuildArtifacts@1
+          displayName: Publish Scan Results
+          inputs:
+            pathToPublish: '$(System.ArtifactsDirectory)/.gdn/msdo.sarif'
+            artifactName: 'scan_infra_one_folder'
+          continueOnError: ${{ eq(lower(parameters.continueOnScanError), 'true') }}

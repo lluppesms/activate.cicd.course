@@ -1,0 +1,66 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline to deploy Bicep Container Registry in Azure
+# ------------------------------------------------------------------------------------------------------------------------
+# NOTE: This pipeline needs five variables defined as variables for the AzDO pipeline when you create the pipeline:
+#  serviceConnectionName:    'yourServiceConnectionName'
+#  registryName:             'yourContainerRegistryName'
+#  resourceGroupName:        'yourResourceGroupName'
+#  location:                 'eastus'
+#  servicePrincipalObjectId: 'yourServicePrincipalObjectId'
+#    when the publish YML pipeline runs, it runs under the context of a service principal.
+#    the service principal needs "acrpush" rights in order to update the registry.
+#    if you specify the principal objectId here it will be granted upon creation.
+#    if you leave this parm blank you will have to do it yourself later.
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+
+trigger:
+  - none
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+- deployment: CreateRegistry
+  displayName: Initialize Create Registry
+  environment: 'DEV'
+
+- job: CreateRegistryJob
+  displayName: Create Registry Job
+  variables:
+    - name: templateFile
+      value: './infra/bicep/containerregistry.bicep'
+
+  steps:
+  - bash: |
+      echo "serviceConnectionName=$(serviceConnectionName)"
+      echo "resourceGroupName=$(resourceGroupName)"
+      echo "registryName=$(registryName)"
+      echo "servicePrincipalObjectId=$(servicePrincipalObjectId)"
+      echo "templateFile=$(templateFile)"
+      tree $(Pipeline.Workspace)
+    displayName: 'Display Variables'
+    continueOnError: true
+
+  - task: AzureCLI@2
+    displayName: 'Create Resource Group'
+    inputs:
+      azureSubscription: $(serviceConnectionName)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: az group create --name $(resourceGroupName) --location $(location)
+
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Publish Bicep Resources'
+    inputs:
+      csmFile: $(templateFile)
+      overrideParameters: >
+        -containerRegistryName $(registryName) 
+        -servicePrincipalObjectId $(servicePrincipalObjectId)
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: $(serviceConnectionName)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroupName)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      deploymentMode: 'Incremental'

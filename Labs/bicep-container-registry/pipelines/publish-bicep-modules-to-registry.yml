@@ -1,0 +1,51 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline to deploy bicep files from this repository to an Azure Container Registry 
+# ------------------------------------------------------------------------------------------------------------------------
+# NOTE: This pipeline needs two variables defined as variables for the AzDO pipeline when you create the pipeline:
+#  registryName:          'yourContainerRegistryName'
+#  serviceConnectionName: 'yourServiceConnectionName'
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+
+trigger:
+  branches:
+    include:
+    - main
+    - external_publish_script
+  paths:
+    include:
+    - '/bicep/*.bicep'
+    exclude:
+    - '/bicep/main*.bicep' # only include modules, not main.bicep files
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+# ------------------------------------------------------------------------------------------------------------------------
+parameters:
+  - name: runScan
+    displayName: Run Scan
+    type: boolean
+    default: true
+
+# ------------------------------------------------------------------------------------------------------------------------
+variables:
+  - name: directoryToScan
+    value: '/bicep'
+  - name: modulePrefix
+    value: 'bicep/'
+
+# ------------------------------------------------------------------------------------------------------------------------
+stages:
+  - template: templates/template-scan-bicep.yml
+    parameters:
+      runScan: ${{ parameters.runScan }}
+      directoryToScan: ${{ variables.directoryToScan }}
+
+  - template: templates/template-publish-bicep.yml
+    parameters:
+      registryName: ${{ variables.registryName }}
+      serviceConnectionName: ${{ variables.serviceConnectionName }}
+      modulePrefix: ${{ variables.modulePrefix }}
