@@ -40,4 +40,4 @@ Now that we have a repository in Azure DevOps, let's open it in Visual Studio Co
 
 You should be read to start your labs!
 
-[Begin First Lab](../yml/01_Starter/readme.md) | [Create a Custom Build Agent](../build-agents/desktop-runner/readme.md) | [VS Code Install](../setup/2-Visual-Studio-Code.md)  | [Setup AzDO](../setup/1-Create-Azdo-Project.md) | [Table of Contents](../../readme.md)
+[Begin First Lab](../yml/01_Starter/readme.md) | [Create a Custom Build Agent](../build-agents/desktop-runner/readme.md) | [VS Code Install](../setup/3-Visual-Studio-Code.md)  | [Setup AzDO](../setup/1-Create-Azdo-Project.md) | [Table of Contents](../../readme.md)

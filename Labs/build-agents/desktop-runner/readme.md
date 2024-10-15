@@ -104,4 +104,4 @@ That's it!  You now have a self-hosted Azure DevOps Build Runner running on your
 
 ---
 
-[Begin First Lab](../../yml/01_Starter/readme.md) | [VS Code Install](../../setup/2-Visual-Studio-Code.md) | [Table of Contents](../../../readme.md)
+[Begin First Lab](../../yml/01_Starter/readme.md) | [VS Code Install](../../setup/3-Visual-Studio-Code.md) | [Table of Contents](../../../readme.md)

@@ -8,8 +8,6 @@
 
 1. [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 
-1. [Install Bicep Tools](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
-
 1. [Install AZ PowerShell Modules](https://learn.microsoft.com/en-us/powershell/azure/install-azure-powershell)
 
 1. Install [Visual Studio Code](https://code.visualstudio.com/download)

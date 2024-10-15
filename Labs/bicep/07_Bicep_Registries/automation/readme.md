@@ -64,15 +64,46 @@ See: [Container Registry Scoped Permissions](https://learn.microsoft.com/en-us/a
 
 ## Setup a Bicep Container Registry
 
-1. Run the pipeline [create-bicep-container-registry.yml](./create-bicep-container-registry.yml) or run a command similar to the one below to create a container registry in a resource group
+### 1. Create a Bicep Container Registry
 
-    ``` bash
-    $resourceGroupName = 'yourResourceGroup'
-    $registryName = 'yourRegistryName'
-    az deployment group create -n main-deploy-20230213T090000Z --resource-group $resourceGroupName --template-file 'containerregistry.bicep' --parameters registryName=$registryName
-    ```
+Run the pipeline [create-bicep-container-registry.yml](./create-bicep-container-registry.yml) or run a command similar to the one below to create a container registry in a resource group
 
-2. Set up the pipeline [publish-bicep-modules-to-registry.yml](./publish-bicep-modules-to-registry.yml), which will push bicep file changes to the container registry as they are committed. The pipeline needs two variables defined: registryName and subscriptionName.
+``` bash
+$resourceGroupName = 'yourResourceGroup'
+$registryName = 'yourRegistryName'
+az deployment group create `
+ --resource-group $resourceGroupName `
+ --template-file 'containerregistry.bicep' `
+ --parameters registryName=$registryName
+```
+
+### 2. Publish Bicep files into the Container Registry
+
+#### 2.1: Manual Publish
+
+When you want to manually publish a new Bicep file into the registry, you can run a command similar to the one below. This will push the bicep file into the registry with the module path and version defined. However, if you have a lot of templates, doing this manually can be rather tedious.
+
+``` bash
+$registryName="yourBicepRegistryName"
+$modulePath="bicep"
+$moduleName="yourNewModule"
+$moduleVersion="v1.0.0"
+$delimiter=":"
+az bicep publish `
+  --file yourNewModule.bicep `
+  --target br:$registryName.azurecr.io/$modulePath/$moduleName$delimiter$moduleVersion
+
+```
+
+#### 2.2: Automated Publish
+
+Alternatively, you can set up a pipeline that will push automatically publish any bicep file changes to the container registry whenever they are committed to the Bicep folder. A much more detailed example and lab is available in the [Bicep Container Registry exercise](/Labs/bicep-container-registry/readme.md), which is beyond the scope of this lab.
+
+The [publish-bicep-modules-to-registry.yml](/Labs/bicep-container-registry/pipelines/publish-bicep-modules-to-registry.yml) is set up to do exactly that using a [PowerShell script](/Labs/bicep-container-registry/pipelines/templates/template-publish-bicep.yml) . Once it's set up, it will trigger whenever you check code into the main branch of your repository. The pipeline needs two variables defined when you register it: registryName and serviceConnectionName.
+
+This pipeline also optionally employs the [Microsoft Secure DevOps Scan](https://marketplace.visualstudio.com/items?itemName=ms-securitydevops.microsoft-security-devops-azdevops) extension, which must be installed in your Azure DevOps Organization before running the pipeline. This extension will scan the Bicep code for security vulnerabilities and provide a report.
+
+Feel free to explore this on your own time, but it is not required for this lab.
 
 ---
 

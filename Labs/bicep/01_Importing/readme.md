@@ -4,9 +4,9 @@ Pre-Req Exercises:
 
 * If you have not created an Organization and a Project in Azure DevOps, please start with the preparation tasks in the [Create an Azure DevOps Project](../../setup/1-Create-Azdo-Project.md) guide.
 
-* If you have not installed VS Code,  please follow the instructions in the [Set up Visual Studio Code](../../setup/2-Visual-Studio-Code.md)
+* If you have not installed VS Code,  please follow the instructions in the [Set up Visual Studio Code](../../setup/3-Visual-Studio-Code.md)
 
-* If you have not created your own repository for the class based on the course materials,  please follow the instructions in the [Import the Class Repository](../../setup/3-Clone-Repo.md) guide.
+* If you have not created your own repository for the class based on the course materials, please follow the instructions in the [Import the Class Repository](../../setup/3-Clone-Repo.md) guide.
 
 * If you need a custom Build Agent and have not created one yet, you can install a Build Agent on your VM or your Local Machine.  Please follow the instructions in the [Create a Custom Build Agent](../../build-agents/desktop-runner/readme.md) guide.
 

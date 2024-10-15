@@ -8,7 +8,7 @@ If you want to run through the official Learning Path from Microsoft Learn, labs
 
 * If you have not created an Organization and a Project in Azure DevOps, please start with the preparation tasks in the [Create an Azure DevOps Project](../../setup/1-Create-Azdo-Project.md) guide.
 
-* If you have not installed VS Code,  please follow the instructions in the [Set up Visual Studio Code](../../setup/2-Visual-Studio-Code.md)
+* If you have not installed VS Code,  please follow the instructions in the [Set up Visual Studio Code](../../setup/3-Visual-Studio-Code.md)
 
 * If you have not created your own repository for the class based on the course materials, please follow the instructions in the [Import the Class Repository](../../setup/3-Clone-Repo.md) guide.
 
@@ -23,7 +23,7 @@ This workshop will cover a series of labs, in which you will learn to create eff
 ### Before You Start
 
 * [Lab 1.1 - Setting up an Azure DevOps Project](../setup/1-Create-Azdo-Project.md)
-* [Lab 1.2 - Tooling with Visual Studio Code](../setup/2-Visual-Studio-Code.md)
+* [Lab 1.2 - Tooling with Visual Studio Code](../setup/3-Visual-Studio-Code.md)
 * [Lab 1.3 - Import the Class Repository](../setup/3-Clone-Repo.md)
 
 ### Introduction To Bicep
