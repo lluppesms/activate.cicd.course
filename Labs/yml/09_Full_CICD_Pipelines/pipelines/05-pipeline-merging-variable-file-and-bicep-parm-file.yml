@@ -12,7 +12,7 @@ jobs:
    variables:
      - template: vars/var-common-01.yml
      - name: bicepPath
-       value: '$(Build.SourcesDirectory)/Labs/Module_10_CICD_Pipelines/bicep'
+       value: '$(Build.SourcesDirectory)/Labs/yml/09_Full_CICD_Pipelines/bicep'
      - name: bicepFile
        value: 'storageaccount.bicep'
      - name: parameterFile

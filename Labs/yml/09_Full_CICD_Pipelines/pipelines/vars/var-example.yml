@@ -17,7 +17,7 @@ variables:
     value: 'Standard_LRS'
 
   - name: bicepPath
-    value: 'Labs/Module_10_CICD_Pipelines/bicep'
+    value: 'Labs/yml/09_Full_CICD_Pipelines/bicep'
   - name: bicepFileName
     value: 'main-web-app.bicep'
   - name: bicepParameterFileName

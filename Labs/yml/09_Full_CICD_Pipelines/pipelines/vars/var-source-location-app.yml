@@ -23,7 +23,7 @@ variables:
     value: 'DadABase.Tests'
 
   - name: workingDirectoryInfra
-    value: '/Labs/Module_10_CICD_Pipelines/bicep'
+    value: '/Labs/yml/09_Full_CICD_Pipelines/bicep'
     #value: '/infra/bicep'
   - name: workingDirectoryIgnore
     value: '/Docs'

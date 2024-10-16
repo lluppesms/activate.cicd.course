@@ -9,7 +9,7 @@ variables:
   - name: location
     value: 'eastus'
   - name: bicepPath
-    value: '$(Build.SourcesDirectory)/Labs/Module_10_CICD_Pipelines/bicep'
+    value: '$(Build.SourcesDirectory)/Labs/yml/09_Full_CICD_Pipelines/bicep'
   - name: bicepFileName
     value: 'storageaccount.bicep'
   - name: storageAccountName

@@ -33,6 +33,6 @@ stages:
 
   - template: templates/07-template-deploy-bicep.yml
     parameters:
-      bicepPath: 'Labs/Module_10_CICD_Pipelines/bicep'
+      bicepPath: 'Labs/yml/09_Full_CICD_Pipelines/bicep'
       bicepFile: 'storageaccount.bicep'
       parameterFile: 'storageaccount-variables.bicepparam'
