@@ -15,9 +15,11 @@ In this lab, we will see examples in ascending order, building on the concepts o
 | 07-pipeline-with-scanning-template | This pipeline adds in a code scanning template |
 | 08-pipeline-build-deploy-app | This pipeline uses all of the above concepts, then adds in a build and deploy template to deploy a live app |
 | 09-pipeline-build-deploy-app | This pipeline shows how to deploy to multiple stages (i.e. DEV/QA/PROD)  |
-| 99-example-library-pipeline | This example shows how to use external templates from another repository |
-| 99-example-pr-pipeline | This pipeline is an example that can get kicked off whenever a PR is submitted as part of the PR |
-| 99-example-scan-pipeline | This pipeline is an example of a job that can do a security scan on a scheduled basis. |
+| 10-pipeline-build-deploy-test-app | This pipeline shows how to deploy to multiple stages and run smoke tests  |
+| 99-example-library-pipeline | This pipeline shows how to use external templates from another repository |
+| 99-example-pr-pipeline | This pipeline gets kicked off whenever a PR is submitted as part of the PR |
+| 99-example-scan-pipeline | This pipeline executes a security scan on a scheduled basis. |
+| 99-example-auto-test-pipeline | This pipeline is a automated test that gets auto-triggered when another pipeline finishes. |
 
 For more info on setting up pipelines and environments, see:
 
