@@ -1,0 +1,10 @@
+# ----------------------------------------------------------------------------------------------------
+# Service Connection Constants (must be hard-coded constants so they are available at YML compile time)
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - name: serviceConnectionDEV
+    value: 'DEV Service Connection'
+  - name: serviceConnectionQA
+    value: 'QA Service Connection'
+  - name: serviceConnectionProd
+    value: 'PROD Service Connection'

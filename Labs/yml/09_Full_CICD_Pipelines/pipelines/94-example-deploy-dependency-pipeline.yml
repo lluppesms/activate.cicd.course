@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------------------------------------------------
-# Example Pipeline to scan IaC code and deploy it using reusable templates
+# Example Pipeline shows how to use dependencies between stages
 # ------------------------------------------------------------------------------------------------------------------------
 # This pipelines needs a variable group named "Demo.DadABase" with these values:
 #   apiKey='<yourapiKey>'
