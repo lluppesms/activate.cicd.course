@@ -1,0 +1,42 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# GHA Workflow to deploy Azure Resources using a Bicep File
+# ------------------------------------------------------------------------------------------------------------------------
+# You need to set up some secrets before running this workflows - see CreateGitHubSecrets.md for details.
+# You need to set some permissions before running a security scan - see template-security-scan.yml for details.
+# ------------------------------------------------------------------------------------------------------------------------
+name: deploy.bicep
+on: 
+  workflow_dispatch:
+    inputs:
+      securityScan:
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      logLevel:
+        description: 'Log level'     
+        required: false
+        default: 'warning' 
+        type: choice
+        options:
+          - info
+          - warning
+          - debug 
+  
+# ------------------------------------------------------------------------------------------------------------------------
+jobs:
+  create-infra:
+    name: Create Infra
+    uses: ./.github/workflows/template-create-infra.yml
+    secrets: inherit
+    with:
+      envCode: 'dev'
+      securityScan: ${{ inputs.securityScan }}
+      continueOnScanError: true
+      # Example: Lab 2 - no parameter file
+      templateFile: './Labs/bicep/02_Intro/simplest-loganalytics.bicep'
+      # Example: Lab 3 - use parameter file
+      # templateFile: './Labs/bicep/03_Parameters/loganalytics.bicep'
+      # parameterFile: './Labs/bicep/03_Parameters/loganalytics.bicepparam'
