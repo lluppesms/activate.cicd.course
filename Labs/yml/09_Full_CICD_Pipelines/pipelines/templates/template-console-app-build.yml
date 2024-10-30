@@ -53,7 +53,7 @@ jobs:
         value: 'https://$(codeSignVaultName).vault.azure.net/'
 
     steps:
-    - template: read-keyvault-step-template.yml
+    - template: template-read-keyvault-steps.yml
       # get the secrets, but leave the KV firewall rule in place until after the code signing step...
       parameters:
         serviceConnectionName: $(serviceConnectionName)
@@ -61,7 +61,7 @@ jobs:
         vaultResourceGroup: $(codeSignVaultResourceGroup)
         secretsToRetrieve: 'CertName,SigningAppRegAppId,SigningAppRegClientSecret,ActiveDirectoryTenantId,TimestampUrl'
         keepAgentFW: 'true'
-
+s
     - task: CmdLine@2
       displayName: 'Display Variables'
       inputs:
@@ -93,7 +93,7 @@ jobs:
           echo "##[endgroup]"
       continueOnError: true
 
-    - template: list-directory-step-template.yml
+    - template: template-list-directory-steps.yml
       parameters:
         stepName: 'List Files'
         directoryName: $(System.DefaultWorkingDirectory)
@@ -136,7 +136,7 @@ jobs:
         zipAfterPublish: false
 
     - ${{ if eq(parameters.showAdditionalInfo, true) }}:
-      - template: list-directory-step-template.yml
+      - template: template-list-directory-steps.yml
         parameters:
           stepName: 'List Files after build'
           directoryName: $(System.DefaultWorkingDirectory)
@@ -160,7 +160,7 @@ jobs:
       continueOnError: true
 
     # remove the KV firewall rule now
-    - template: read-keyvault-step-template.yml
+    - template: template-read-keyvault-steps.yml
       parameters:
         serviceConnectionName: $(serviceConnectionName)
         vaultName: $(codeSignVaultName)
@@ -185,7 +185,7 @@ jobs:
         failOnStderr: false
 
     - ${{ if eq(parameters.showAdditionalInfo, true) }}:
-      - template: list-directory-step-template.yml
+      - template: template-list-directory-steps.yml
         parameters:
           stepName: 'List files after move'
           directoryName: $(System.DefaultWorkingDirectory)
@@ -214,7 +214,7 @@ jobs:
         failOnStderr: false
 
     - ${{ if eq(parameters.showAdditionalInfo, true) }}:
-      - template: list-directory-step-template.yml
+      - template: template-list-directory-steps.yml
         parameters:
           stepName:  'Display files before publish'
           directoryName: $(System.DefaultWorkingDirectory)
