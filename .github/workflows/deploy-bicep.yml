@@ -5,10 +5,14 @@
 # You need to set some permissions before running a security scan - see template-security-scan.yml for details.
 # ------------------------------------------------------------------------------------------------------------------------
 name: deploy.bicep
+## uncomment the "on: push" line if you want the pipeline to run automatically whenever you do a checkin
+# on: push
+## uncomment the "on: workflow_dispatch" lines if you want to run the pipeline manually each time
 on: 
   workflow_dispatch:
     inputs:
       securityScan:
+        description: 'Run Security Scan'
         required: false
         default: 'false'
         type: choice
@@ -16,7 +20,7 @@ on:
           - true
           - false
       logLevel:
-        description: 'Log level'     
+        description: 'Log level'
         required: false
         default: 'warning' 
         type: choice

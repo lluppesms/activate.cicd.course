@@ -1,0 +1,64 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# GHA Workflow to run an az deployment group command with or without parameters
+# Change the variables in the env section to specify which file and what parameters you want to execute
+# ------------------------------------------------------------------------------------------------------------------------
+# FYI: You need to set up some secrets before running this workflows - see CreateGitHubSecrets.md for details.
+# ------------------------------------------------------------------------------------------------------------------------
+name: run.az.command
+
+## uncomment the "on: push" line if you want the pipeline to run automatically whenever you do a checkin
+# on: push
+## uncomment the "on: workflow_dispatch" line if you want to run the pipeline manually each time
+on: workflow_dispatch
+   
+# ------------------------------------------------------------------------------------------------------------------------
+jobs:
+  run-command:
+    name: Run Command
+    runs-on: ubuntu-latest
+
+    env:
+      azureRegion: 'eastus'
+      resourceGroupName: 'rg_demo'
+      
+      templateFileName: '/Labs/bicep/02_Intro/simplest-loganalytics.bicep'
+      parameters: ''
+      # templateFileName: './Labs/bicep/03_Parameters/loganalytics.bicep'
+      # parameters: 'logAnalyticsWorkspaceName=logAnalytics02'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@main
+
+      - name: Log into Azure
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+      - name: Create Resource Group
+        run: 
+          az group create --name ${{ env.resourceGroupName }} --location ${{ env.azureRegion }}
+
+      - name: Execute AZ Deploy without Parms
+        if: env.parameters == ''
+        id: deploywithoutparms
+        shell: pwsh
+        run: 
+          az deployment group create `
+            --resource-group ${{ env.resourceGroupName }}  `
+            --template-file ${{ env.templateFileName }}  `
+
+      - name: Execute AZ Deploy with Parms
+        if: env.parameters != ''
+        id: deploywithparms
+        shell: pwsh
+        run: 
+          az deployment group create `
+            --resource-group ${{ env.resourceGroupName }}  `
+            --template-file ${{ env.templateFileName }}  `
+            --parameters ${{ env.parameters }} 
+
+      - name: List files
+        if: always()
+        run: 
+          tree ${{ env.GITHUB_ACTION_PATH }}

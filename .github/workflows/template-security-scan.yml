@@ -35,7 +35,7 @@ jobs:
 
     - name: Run Full Infra Scan
       continue-on-error: ${{ inputs.continueOnScanError }} 
-      uses: microsoft/security-devops-action@latest
+      uses: microsoft/security-devops-action@release/vNext
       id: msdo
       with:
         tools: templateanalyzer,terrascan,trivy
@@ -47,7 +47,7 @@ jobs:
         sarif_file: ${{ steps.msdo.outputs.sarifFile }}
 
     - name: Upload MS SecDevOps alerts to Workflow Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:  
         name: alerts
         path: ${{ steps.msdo.outputs.sarifFile }}
