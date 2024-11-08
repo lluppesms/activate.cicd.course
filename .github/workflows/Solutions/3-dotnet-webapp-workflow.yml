@@ -1,0 +1,135 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# GHA Workflow to deploy Azure Resources and DotNet WebApp
+# ------------------------------------------------------------------------------------------------------------------------
+# You need to set up secrets in the GitHub Secrets Repository before running these workflows - see CreateGitHubSecrets.md
+# ------------------------------------------------------------------------------------------------------------------------
+name: 3.dotnet.webapp.workflow
+on: 
+  workflow_dispatch:
+    inputs:
+      runSecurityScan:
+        description: 'Run Security Scan'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      runCreateInfra:
+        description: 'Deploy Bicep'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - true
+          - false
+      runBuildDeploy:
+        description: 'Build and Deploy App'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      runSmokeTest:
+        description: 'Run Smoke Tests'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      logLevel:
+        description: 'Log level'
+        required: false
+        default: 'warning' 
+        type: choice
+        options:
+          - info
+          - warning
+          - debug 
+
+jobs:
+# ------------------------------------------------------------------------------------------------------------------------
+  security-scan:
+    name: Scan Code
+    uses: ./.github/workflows/template-security-scan.yml
+    secrets: inherit
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+    with:
+      runSecurityScan: ${{ inputs.runSecurityScan == 'true' }}
+
+  # ------------------------------------------------------------------------------------------------------------------------
+  create-infra:
+    name: Create Infra
+    uses: ./.github/workflows/template-create-infra.yml
+    if: inputs.runCreateInfra == 'true' || inputs.runBuildDeploy == 'true'
+    secrets: inherit
+    permissions:
+      id-token: write    # Required to request the OIDC JWT Token
+      contents: read     # Required when GH token is used to authenticate with private repo
+      actions: read      # Required to read the job id, so that it can be re-run
+      issues: read
+      checks: write
+    with:
+      envCode: 'dev'
+      templatePath: './infra/bicep/dotnetwebapp/'
+      templateFile: 'main-dotnetwebapp.bicep'
+      parameterFile: 'main-dotnetwebapp.bicepparam'
+      parameterFileReplaceTokens: 'true'
+      runCreateInfra: ${{ inputs.runCreateInfra == 'true' }}
+
+  # ------------------------------------------------------------------------------------------------------------------------
+  build-app:
+    name: Build WebApp
+    uses: ./.github/workflows/template-dotnet-webapp-build.yml
+    if: inputs.runBuildDeploy == 'true' || inputs.runSmokeTest == 'true'
+    needs: create-infra
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+      actions: read
+      pull-requests: read
+      issues: read
+      checks: write
+    with:
+      envCode: 'dev'
+      rootDirectory: 'src/dotnetwebapp/DadABase.Web'
+      projectName: 'DadABase.Web'
+      testDirectory: 'src/dotnetwebapp/DadABase.Tests'
+      testProjectName: 'DadABase.Tests'
+      testApplication: true
+      listFilesAfterBuild: true
+
+# ------------------------------------------------------------------------------------------------------------------------
+  deploy-app:
+    name: Deploy WebApp
+    uses: ./.github/workflows/template-dotnet-webapp-deploy.yml
+    if: inputs.runBuildDeploy == 'true' || inputs.runSmokeTest == 'true'
+    needs: build-app
+    secrets: inherit
+    permissions:
+      id-token: write    # Required to request the OIDC JWT Token
+      contents: read     # Required when GH token is used to authenticate with private repo
+      actions: read      # Required to read the job id, so that it can be re-run
+    with:
+      envCode: 'dev'
+
+# ------------------------------------------------------------------------------------------------------------------------
+  run-smoke-test:
+    name: Test WebApp
+    if: inputs.runSmokeTest == 'true'
+    needs: deploy-app
+    uses: ./.github/workflows/template-smoke-test.yml
+    secrets: inherit
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: read
+    with:
+      envCode: 'dev'

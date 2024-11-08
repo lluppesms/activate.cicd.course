@@ -25,7 +25,7 @@ var tags = union(commonTags, templateTag)
 var publishingUsername = '$${functionAppName}'
 
 var functionKind = 'functionapp,linux'
-var linuxFxVersion = 'Python|3.9'
+var linuxFxVersion = 'Python|3.12'
 
 // --------------------------------------------------------------------------------
 resource storageAccountResource 'Microsoft.Storage/storageAccounts@2019-06-01' existing = { name: functionStorageAccountName }

@@ -1,0 +1,88 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# GHA Reusable Called Workflow to deploy an already built WebApp
+# ------------------------------------------------------------------------------------------------------------------------
+name: z_template_dotnet_webapp_deploy
+run-name: Deploy WebApp
+on:
+  workflow_call:
+    inputs:
+      envCode:
+        required: true
+        type: string
+      listFilesBeforeDeploy:
+        required: false
+        type: boolean
+        default: true
+  
+# ------------------------------------------------------------------------------------------------------------------------
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.envCode }}
+    env:
+      artifactName: webapp
+      generatedAppEnvName: 'web-${{ vars.RESOURCE_TOKEN }}'
+
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ env.artifactName }}
+
+    - name: List Files After Build
+      if: inputs.listFilesBeforeDeploy == true
+      run: 
+        tree ${{ env.GITHUB_ACTION_PATH }}
+      continue-on-error: true
+  
+    - name: Create Runtime Variables
+      id: vars
+      shell: bash
+      run: |
+        readonly rundatetime=$(date +'%Y-%m-%dT%H:%M:%SZ')
+        echo "rundatetime=$rundatetime" >> $GITHUB_OUTPUT
+        readonly rundate=$(date +'%Y.%m.%d')
+        echo "rundate=$rundate" >> $GITHUB_OUTPUT
+        readonly commitbranch=$(echo ${GITHUB_REF#refs/heads/})
+        echo "commitbranch=$commitbranch" >> $GITHUB_OUTPUT
+        readonly commitsha=${GITHUB_SHA::6}
+        echo "commitsha=$commitsha" >> $GITHUB_OUTPUT
+      continue-on-error: true
+
+    - name: Put Build Details in buildinfo.json
+      shell: bash
+      run: |
+        echo -e -n "{\"buildDate\":\"${{ steps.vars.outputs.rundatetime }}\",\"buildNumber\":\"${{ steps.vars.outputs.rundate }}.${{ github.run_number }}\",\"buildId\":\"${{ github.run_id }}.${{ github.run_attempt }}\",\"run_id\":\"${{ github.run_id }}\",\"run_attempt\":\"${{ github.run_attempt }}\",\"run_number\":\"${{ github.run_number }}\",\"branchName\":\"${{ steps.vars.outputs.commitbranch }}\",\"commitHash\":\"${{ steps.vars.outputs.commitsha }}\"}" > ${{ env.GITHUB_ACTION_PATH }}buildinfo.json
+      continue-on-error: true
+
+    - name: Log into Azure
+      uses: azure/login@v1
+      with:
+        creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+      # - name: Azure login
+      #   uses: wlgore/azure-repository-login@v1
+      #   id: azure-login
+      #   with:
+      #     azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}  # this is created by the action - the first time it fails, run again and it works
+      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}                   # need to set this manually
+      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}                               # need to set this manually
+      #     bot-credentials: ${{ secrets.AZURE_REPOSITORY_LOGIN_BOT_CREDENTIALS }}  # org level creds should exist already
+      #     environment: ${{ inputs.environment }}
+      #     location: EastUS
+      #     use-pretty-names: true
+
+    - name: Deploy WebApp Zip
+      uses: Azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.generatedAppEnvName }}
+        package: .
+
+    - name: Logout and cleanup
+      shell: bash
+      run: |
+        az logout
+        az cache purge
+        az account clear

@@ -1,0 +1,94 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# GHA Workflow to deploy Azure Resources and Python Function App
+# ------------------------------------------------------------------------------------------------------------------------
+# You need to set up secrets in the GitHub Secrets Repository before running these workflows - see CreateGitHubSecrets.md
+# ------------------------------------------------------------------------------------------------------------------------
+name: 2.python.function.workflow
+on: 
+  workflow_dispatch:
+    inputs:
+      runSecurityScan:
+        description: 'Run Security Scan'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      runCreateInfra:
+        description: 'Deploy Bicep'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - true
+          - false
+      runBuildDeploy:
+        description: 'Build and Deploy App'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      logLevel:
+        description: 'Log level'
+        required: false
+        default: 'warning' 
+        type: choice
+        options:
+          - info
+          - warning
+          - debug 
+
+jobs:
+# ------------------------------------------------------------------------------------------------------------------------
+  security-scan:
+    name: Scan Code
+    uses: ./.github/workflows/template-security-scan.yml
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+    with:
+      runSecurityScan: ${{ inputs.runSecurityScan == 'true' }}
+
+# ------------------------------------------------------------------------------------------------------------------------
+  create-infra:
+    name: Create Infra
+    uses: ./.github/workflows/template-create-infra.yml
+    if: inputs.runCreateInfra == 'true' || inputs.runBuildDeploy == 'true'
+    secrets: inherit
+    permissions:
+      id-token: write    # Required to request the OIDC JWT Token
+      contents: read     # Required when GH token is used to authenticate with private repo
+      actions: read      # Required to read the job id, so that it can be re-run
+      issues: read
+      checks: write
+    with:
+      envCode: 'dev'
+      templatePath: './infra/bicep/pythonfunction/'
+      templateFile: 'main-pythonfunction.bicep'
+      parameterFile: 'main-pythonfunction.bicepparam'
+      parameterFileReplaceTokens: 'true'
+      runCreateInfra: ${{ inputs.runCreateInfra == 'true' }}
+
+# ------------------------------------------------------------------------------------------------------------------------
+  build-app:
+    name: Build Python Function
+    uses: ./.github/workflows/template-python-function-build.yml
+    if: inputs.runBuildDeploy == 'true'
+    needs: create-infra
+    secrets: inherit
+    with:
+      envCode: 'dev'
+      rootDirectory: 'src/pythonfunction'
+
+  deploy-app:
+    name: Deploy Python Function
+    uses: ./.github/workflows/template-python-function-deploy.yml
+    if: inputs.runBuildDeploy == 'true'
+    needs: build-app
+    secrets: inherit
+    with:
+      envCode: 'dev'

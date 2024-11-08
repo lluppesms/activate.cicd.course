@@ -1,0 +1,24 @@
+﻿@page "/random"
+<PageTitle>Random</PageTitle>
+
+@inject IJokeRepository JokeRepository
+
+<h1>Tell me a Joke, Dad!</h1>
+
+<div class="JokeCard" style="margin-top: 30px;">@myJoke.JokeTxt</div>
+
+<button class="btn btn-primary" @onclick="ExecuteRandom" style="margin-top: 30px;">Tell me another one!</button>
+
+@code {
+    private Joke myJoke = new Joke(string.Empty);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.FromResult(true);
+        ExecuteRandom();
+    }
+    protected void ExecuteRandom()
+    {
+        myJoke = JokeRepository.GetRandomJoke();
+    }
+}

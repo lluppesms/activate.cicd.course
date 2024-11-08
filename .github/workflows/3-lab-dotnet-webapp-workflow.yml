@@ -1,0 +1,37 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Stubbed Out Workflow to deploy Azure Resources and DotNet WebApp
+# ------------------------------------------------------------------------------------------------------------------------
+# You need to set up secrets in the GitHub Secrets Repository before running these workflows - see CreateGitHubSecrets.md
+# ------------------------------------------------------------------------------------------------------------------------
+name: 3.dotnet.webapp.workflow
+on: workflow_dispatch
+
+jobs:
+# ------------------------------------------------------------------------------------------------------------------------
+  security-scan:
+    name: Scan Code
+    uses: ./.github/workflows/template-not-implemented-yet.yml
+
+# ------------------------------------------------------------------------------------------------------------------------
+  create-infra:
+    name: Create Infra
+    uses: ./.github/workflows/template-not-implemented-yet.yml
+    needs: security-scan
+
+# ------------------------------------------------------------------------------------------------------------------------
+  build-app:
+    name: Build Python Function
+    uses: ./.github/workflows/template-not-implemented-yet.yml
+    needs: create-infra
+
+# ------------------------------------------------------------------------------------------------------------------------
+  deploy-app:
+    name: Deploy Python Function
+    uses: ./.github/workflows/template-not-implemented-yet.yml
+    needs: build-app
+
+# ------------------------------------------------------------------------------------------------------------------------
+  run-smoke-test:
+    name: Test WebApp
+    uses: ./.github/workflows/template-not-implemented-yet.yml
+    needs: deploy-app

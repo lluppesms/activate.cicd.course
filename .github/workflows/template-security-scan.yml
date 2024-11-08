@@ -2,14 +2,18 @@
 # GHA Reusable Called Workflow to scan files for security issues
 # ------------------------------------------------------------------------------------------------------------------------
 # NOTE: If you get the error: 'Resource not accessible by integration' on the upload step
-# then you will need to go into the Repository -> Settings -> Workflow Permissions
+# then you will need to go into the Repository -> Settings -> Actions -> General -> Workflow Permissions
 # and enable the "Read and write permissions" to be able to publish the results
 # ------------------------------------------------------------------------------------------------------------------------
-name: template_security_scan
+name: z_template_security_scan
 run-name: Run Security Scan
 on:
   workflow_call:
     inputs:
+      runSecurityScan:
+        required: false
+        default: false
+        type: boolean
       continueOnScanError:
         required: false
         default: true
@@ -20,6 +24,10 @@ jobs:
   scanner:
     name: Security Scan
     runs-on: windows-latest
+    permissions:
+      actions: read
+      contents: read
+      checks: write
 
     steps:
     - name: Checkout
@@ -27,6 +35,7 @@ jobs:
 
     - name: Setup
       uses: actions/setup-dotnet@v3
+      if: inputs.runSecurityScan
       with:
         dotnet-version: |
           5.0.x
@@ -34,6 +43,7 @@ jobs:
           8.0.x
 
     - name: Run Full Infra Scan
+      if: inputs.runSecurityScan
       continue-on-error: ${{ inputs.continueOnScanError }} 
       uses: microsoft/security-devops-action@release/vNext
       id: msdo
@@ -41,13 +51,15 @@ jobs:
         tools: templateanalyzer,terrascan,trivy
 
     - name: Upload MS SecDevOps alerts to Security tab
+      if: inputs.runSecurityScan
       continue-on-error: true
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: ${{ steps.msdo.outputs.sarifFile }}
 
     - name: Upload MS SecDevOps alerts to Workflow Artifacts
-      uses: actions/upload-artifact@v3
+      if: inputs.runSecurityScan
+      uses: actions/upload-artifact@v4
       with:  
         name: alerts
         path: ${{ steps.msdo.outputs.sarifFile }}

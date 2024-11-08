@@ -1,0 +1,61 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# GHA Workflow to deploy Azure Resources using a Bicep File
+# ------------------------------------------------------------------------------------------------------------------------
+# You need to set up some secrets before running this workflows - see CreateGitHubSecrets.md for details.
+# You need to set some permissions before running a security scan - see template-security-scan.yml for details.
+# ------------------------------------------------------------------------------------------------------------------------
+name: labs.deploy.bicep.workflow
+## uncomment the "on: push" line if you want the pipeline to run automatically whenever you do a checkin
+# on: push
+## uncomment the "on: workflow_dispatch" lines if you want to run the pipeline manually each time
+on: 
+  workflow_dispatch:
+    inputs:
+      runSecurityScan:
+        description: 'Run Security Scan'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      logLevel:
+        description: 'Log level'
+        required: false
+        default: 'warning' 
+        type: choice
+        options:
+          - info
+          - warning
+          - debug 
+  
+# ------------------------------------------------------------------------------------------------------------------------
+jobs:
+  security-scan:
+    name: Scan Code
+    uses: ./.github/workflows/template-security-scan.yml
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+    with:
+      runSecurityScan: ${{ inputs.runSecurityScan == 'true' }}
+
+  # ------------------------------------------------------------------------------------------------------------------------
+  create-infra:
+    name: Create Infra
+    uses: ./.github/workflows/template-create-infra.yml
+    secrets: inherit
+    permissions:
+      id-token: write    # Required to request the OIDC JWT Token
+      contents: read     # Required when GH token is used to authenticate with private repo
+      actions: read      # Required to read the job id, so that it can be re-run
+    with:
+      envCode: 'dev'
+      # Example: Lab 2 - no parameter file
+      templatePath: './Labs/bicep/02_Intro/'
+      templateFile: 'simplest-loganalytics.bicep'
+      # Example: Lab 3 - use parameter file
+      # templatePath: './Labs/bicep/03_Parameters/'
+      # templateFile: 'loganalytics.bicep'
+      # parameterFile: 'loganalytics.bicepparam'

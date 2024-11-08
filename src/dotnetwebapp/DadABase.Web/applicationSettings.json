@@ -1,0 +1,8 @@
+{
+  "AppSettings:AppVersion": "v1",
+  "AppSettings:AppTitle": "The Dad-A-Base",
+  "AppSettings:AppDescription": "An ASP.NET Core Web API for storing Dad Jokes",
+  "AppSettings:EnvironmentName": "DEV",
+  "AppSettings:DataSource": "JSON",
+  "AppSettings:EnableSwagger": true
+}

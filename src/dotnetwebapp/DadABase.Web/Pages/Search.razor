@@ -1,0 +1,35 @@
+﻿@page "/search"
+<PageTitle>Search</PageTitle>
+
+<Div Style="padding: 25px;">
+    <h1>Search the Dad-A-Base</h1>
+
+    <div class="alert alert-secondary mt-4">
+        <span class="text-nowrap">
+            Search For:
+            <input type="text" id="inputText"  @bind="SearchTerm" class="form-control" @onkeydown="@CheckForEnterKey" />
+            <br />
+            Category:
+            @* If you want multi-select:  <Select TValue="string" SelectedValuesChanged="@OnMultiSelectValuesChanged" Multiple> *@
+            <Select TValue="string" SelectedValueChanged="@OnSelectedValueChanged">
+                <SelectItem value="ALL" selected>All Categories</SelectItem>
+                @foreach (var category in JokeCategories)
+                {
+                    <SelectItem Value="@category">@category</SelectItem>
+                }
+            </Select>
+            <br />
+            <button class="btn btn-primary" id="btnSearch" @onclick="ExecuteSearch" @onkeydown="@CheckForEnterKey">Search</button>
+        </span>
+    </div>
+
+    <ul id="jokeList" style="list-style-type: none;">
+    @foreach (var myJoke in myJokes)
+    {
+        <li><JokeDisplayComponent myJoke="@myJoke" /></li>
+    }
+    </ul>
+    <br />
+    <br />
+    &nbsp;
+</Div>

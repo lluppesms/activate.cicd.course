@@ -1,0 +1,31 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Stubbed Out Workflow to deploy Azure Resources and Python Function App
+# ------------------------------------------------------------------------------------------------------------------------
+# You need to set up secrets in the GitHub Secrets Repository before running these workflows - see CreateGitHubSecrets.md
+# ------------------------------------------------------------------------------------------------------------------------
+name: 2.python.function.workflow
+on: workflow_dispatch
+
+jobs:
+# ------------------------------------------------------------------------------------------------------------------------
+  security-scan:
+    name: Scan Code
+    uses: ./.github/workflows/template-not-implemented-yet.yml
+
+# ------------------------------------------------------------------------------------------------------------------------
+  create-infra:
+    name: Create Infra
+    uses: ./.github/workflows/template-not-implemented-yet.yml
+    needs: security-scan
+
+# ------------------------------------------------------------------------------------------------------------------------
+  build-app:
+    name: Build Python Function
+    uses: ./.github/workflows/template-not-implemented-yet.yml
+    needs: create-infra
+
+# ------------------------------------------------------------------------------------------------------------------------
+  deploy-app:
+    name: Deploy Python Function
+    uses: ./.github/workflows/template-not-implemented-yet.yml
+    needs: build-app

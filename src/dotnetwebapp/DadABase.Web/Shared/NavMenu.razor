@@ -1,0 +1,21 @@
+﻿
+<NavLink class="nav-tab-top" href="" Match="NavLinkMatch.All">
+	<Icon Name="IconName.Home" Class="WhiteIcon" /> Home
+</NavLink>
+@* 
+<NavLink class="nav-tab-top" href="Search">
+	<Icon Name="IconName.Search" Class="WhiteIcon" /> Search
+</NavLink> 
+*@
+<NavLink class="nav-tab-top" href="About">
+	<Icon Name="IconName.InfoCircle" Class="WhiteIcon" /> About
+</NavLink>
+
+<AuthorizeView> @*  Roles="Admin"> *@
+	<NavLink class="nav-tab-top" href="Swagger">
+		<Icon Name="IconName.Code" Class="WhiteIcon" /> Swagger
+	</NavLink>
+	<NavLink class="nav-tab-top" href="Admin">
+		<Icon Name="IconName.Key" Class="WhiteIcon" /> Admin
+	</NavLink>
+</AuthorizeView>

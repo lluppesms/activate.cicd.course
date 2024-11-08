@@ -14,7 +14,7 @@ module logAnalyticsModule 'loganalytics.bicep' = {
   params:{
     workspaceName: logAnalyticsName
     location:location
-    skuName: skuName
+    skuName: logAnalyticsSKU
   }
 }
 
@@ -28,7 +28,7 @@ Note that if you change the name `loganalytics.bicep` to something else like `bo
 
 ### Deployment Names
 
-The word right after the `module` (in this case 'storageModule') will be the name of this resource in the context of this particular bicep file. You will use that if you want to reference this resource in other parts of this Bicep file.
+The word right after the `module` (in this case 'logAnalyticsModule') will be the name of this resource in the context of this particular bicep file. You will use that if you want to reference this resource in other parts of this Bicep file.
 
 Each `module` deploy will create a separate child deployment in the Deployments section of your Azure Resource Group, and the `name` parameter will be the deployment name. If you use the static name (which is the same every time you deploy), it will overwrite the previous deployment history.  If you want to keep an easily accessible history of the previous deployment, you will need to change the name parameter by adding something unique, (like appending a date suffix).
 
@@ -125,6 +125,7 @@ az deployment group create `
  --resource-group $resourceGroupName `
  --template-file main-local-module.bicep `
  --parameters main-local-module.bicepparam
+ 
 ```
 
 Go to the Azure portal and look at the resources in the rg_demo resource group.  You should see a new App Insights resource that was created by the module.  If you click on the Settings -> Deployments menu and you should see something like this:

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DadABase.Web", "DadABase.Web\DadABase.Web.csproj", "{94D40E28-3733-4EBC-AE04-ED656AF85678}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DadABase.Tests", "DadABase.Tests\DadABase.Tests.csproj", "{C0F552C9-90B9-4AC5-A29D-2A6A85AADE26}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94D40E28-3733-4EBC-AE04-ED656AF85678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94D40E28-3733-4EBC-AE04-ED656AF85678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94D40E28-3733-4EBC-AE04-ED656AF85678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94D40E28-3733-4EBC-AE04-ED656AF85678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0F552C9-90B9-4AC5-A29D-2A6A85AADE26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0F552C9-90B9-4AC5-A29D-2A6A85AADE26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0F552C9-90B9-4AC5-A29D-2A6A85AADE26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0F552C9-90B9-4AC5-A29D-2A6A85AADE26}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {46D5F122-DF97-4140-AABF-C1E5E456B6ED}
+	EndGlobalSection
+EndGlobal

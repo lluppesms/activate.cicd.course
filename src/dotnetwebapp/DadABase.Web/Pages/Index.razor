@@ -1,0 +1,16 @@
+﻿@page "/"
+<PageTitle>@Data.Constants.ApplicationTitle</PageTitle>
+
+<Row Style="padding: 20px; width: 95%;">
+    <Column ColumnSize="ColumnSize.Is8.OnDesktop.Is8.OnTablet.Is12.OnMobile">
+        <h1>Tell me a Joke, Dad!</h1>
+        <LoadingIndicator @ref="jokeLoadingIndicator">
+            <ul id="jokeList" style="list-style-type: none;">
+              <li><JokeDisplayComponent myJoke="@myJoke" /></li>
+            </ul>
+        </LoadingIndicator>
+        <button class="btn btn-primary" @onclick="ExecuteRandom" style="margin-top: 40px;">Tell me another one!</button>
+    </Column>
+
+</Row>
+<SnackbarStack @ref="snackbarstack" Location="SnackbarStackLocation.BottomEnd" />

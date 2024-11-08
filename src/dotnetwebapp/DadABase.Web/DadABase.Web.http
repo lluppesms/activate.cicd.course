@@ -1,0 +1,11 @@
+﻿@DadABase.Web_HostAddress = https://localhost:44349
+@APIKey=DadJokes!
+
+
+GET {{DadABase.Web_HostAddress}}/api/joke
+APIKey: {{APIKey}}
+###
+
+GET {{DadABase.Web_HostAddress}}/api/category/List
+APIKey: {{APIKey}}
+

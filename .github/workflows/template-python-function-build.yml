@@ -1,0 +1,54 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# GHA Reusable Called Workflow to build a Function App ready to deploy to Azure
+# ------------------------------------------------------------------------------------------------------------------------
+# You need to set up secrets in the GitHub Secrets Repository before running these workflows.
+#   See Docs\CreateGitHubSecrets\.md for details
+# ------------------------------------------------------------------------------------------------------------------------
+name: z_template_python_function_build
+run-name: Build Python Function App
+on:
+  workflow_call:
+    inputs:
+      envCode:
+        required: true
+        type: string
+      rootDirectory:
+        required: true
+        type: string
+
+# ------------------------------------------------------------------------------------------------------------------------
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.envCode }}
+
+    env:
+      PYTHON_VERSION: '3.12' 
+      artifactName: pythonapp
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: List Files
+      run: 
+        tree ${{ env.GITHUB_ACTION_PATH }}
+      continue-on-error: true
+
+    - name: Install dependencies
+      run: |
+        pip install setuptools
+        pip install --target="./.python_packages/lib/site-packages" -r ./${{ inputs.rootDirectory }}/requirements.txt
+
+    - name: Save Publish Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.artifactName }}
+        path: '${{ inputs.rootDirectory }}'

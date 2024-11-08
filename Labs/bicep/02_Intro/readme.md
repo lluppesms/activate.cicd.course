@@ -14,13 +14,13 @@ cd Labs\Bicep\02_Intro
 
   ![Terminal](img/Terminal_01.png)
 
-In order to create things in Azure you may (probably) need to login to Azure first.  Run this command and follow the instructions to login.
+In order to create things in Azure you will (probably) need to login to Azure first.  Run this command and follow the instructions to login.
 
 ``` bash
 az login
 ```
 
-If you have access to more than one subscription you will need to set the default to a specific one:
+If you have access to more than one subscription you may need to set the default to a specific one:
 
 ``` bash
 az account set --subscription <yourSubscriptionId>
@@ -55,6 +55,18 @@ Let's begin by deploying the simplest bicep file.  Open the file `simplest-logan
 $resourceGroupName="rg_demo"
 az deployment group create `
  --resource-group $resourceGroupName `
+ --template-file simplest-loganalytics.bicep
+
+```
+
+> **NOTE FOR MAC Users...**
+
+> If you are using a Mac, you will need to change the commands found in the lab slightly.  The line continuation character on a PC is the "`", and on the Mac it is a "\\", so you will have to modify the commands slightly.  In addition, when you assign a variable, you do not need the leading "$" character.  Here is the same command for a Mac:
+
+``` bash
+resourceGroupName="rg_demo"
+az deployment group create \
+ --resource-group $resourceGroupName \
  --template-file simplest-loganalytics.bicep
 
 ```

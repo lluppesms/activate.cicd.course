@@ -1,0 +1,14 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# GHA Stub Workflow
+# ------------------------------------------------------------------------------------------------------------------------
+name: z_template_not_implemented
+run-name: Not Implemented Yet
+on: workflow_call
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Stub Step
+      run: |-
+        echo "Not implemented yet!"
+      continue-on-error: true

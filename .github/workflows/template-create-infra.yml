@@ -1,10 +1,9 @@
 # ------------------------------------------------------------------------------------------------------------------------
 # GHA Reusable Called Workflow to deploy Azure Resources Only
 # ------------------------------------------------------------------------------------------------------------------------
-# You need to set up secrets in the GitHub Secrets Repository before running these workflows.
-#   See Docs\CreateGitHubSecrets\.md for details
+# FYI: You need to set up some secrets before running this workflows - see CreateGitHubSecrets.md for details.
 # ------------------------------------------------------------------------------------------------------------------------
-name: template_deploy_infra
+name: z_template_deploy_infra
 run-name: Deploy Infra
 on:
   workflow_call:
@@ -12,81 +11,146 @@ on:
       envCode:
         required: true
         type: string
-      securityScan:
+      templatePath: 
         required: false
         type: string
-        default: 'false'
+        default: 'infra/Bicep/'
       templateFile: 
         required: false
         type: string
-        default: 'infra/Bicep/main.bicep'
+        default: 'main.bicep'
       parameterFile: 
         required: false
         type: string
         default: ''
-      continueOnScanError:
+      parameterFileReplaceTokens: 
+        required: false
+        type: string
+        default: 'false'
+      deploymentMode: 
+        required: false
+        type: string
+        default: 'Incremental'
+      runCreateInfra:
         required: false
         default: true
         type: boolean
-  
+
+# ------------------------------------------------------------------------------------------------------------------------
+# Setup
 # ------------------------------------------------------------------------------------------------------------------------
 jobs:
-  security-scan:
-    name: Scan Code
-    if: inputs.securityScan == 'true'
-    uses: ./.github/workflows/template-security-scan.yml
-    with:
-      continueOnScanError: ${{ inputs.continueOnScanError }}
-
   deploy:
     name: Deploy Bicep
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.envCode }}
-    
+    permissions:
+      id-token: write    # Required to request the OIDC JWT Token
+      contents: read     # Required when GH token is used to authenticate with private repo
+      actions: read      # Required to read the job id, so that it can be re-run
+      
+    # ------------------------------------------------------------------------------------------------------------------------
+    # Variables
+    # ------------------------------------------------------------------------------------------------------------------------
     env:
-      generatedAppEnvName: ${{ vars.APP_NAME }}-${{ inputs.envCode }}
-      generatedResourceGroupName: ${{ vars.RESOURCEGROUPPREFIX }}_${{ inputs.envCode }}
+      envCode: ${{ inputs.envCode }}
+      generatedResourceGroupName: ${{ vars.RESOURCEGROUPNAME }}
 
+    # ------------------------------------------------------------------------------------------------------------------------
+    # Actions
+    # ------------------------------------------------------------------------------------------------------------------------
     steps:
+    - name: Create Variables
+      run: |
+        if [[ $parameterFile == '' ]]; then
+            echo "parameterFilePath=" >> "$GITHUB_ENV"
+        else
+            echo "parameterFilePath=${{ inputs.templatePath }}${{ inputs.parameterFile }}" >> "$GITHUB_ENV"
+        fi
     - name: Display Variables
       run: |-
-        echo "generatedAppEnvName=${{ env.generatedAppEnvName }}"
         echo "generatedResourceGroupName=${{ env.generatedResourceGroupName }}"
-        echo "appName=${{ vars.APP_NAME }}"
         echo "location=${{ vars.AZURE_LOCATION }}"
-        echo "storageSku=${{ vars.STORAGE_SKU }}"
-        echo "functionAppSku=${{ vars.FUNCTION_APP_SKU }}"
-        echo "functionAppSkuFamily=${{ vars.FUNCTION_APP_SKU_FAMILY }}"
-        echo "functionAppSkuTier=${{ vars.FUNCTION_APP_SKU_TIER }}"
-        echo "Resource Group Command:"
-        echo "  az group create --name ${{ env.generatedResourceGroupName }} --location ${{ vars.AZURE_LOCATION }} --tags Application=${{ vars.APP_NAME }} Environment=${{ inputs.envCode }}"
-        echo "Bicep Deploy Sample Command:"
-        echo "  az deployment group create -n main-deploy-${{ env.runDateTimeZ }} --resource-group ${{ env.generatedResourceGroupName }} --template-file ' ${{ inputs.templateFile }}' --parameters '${{ inputs.parameterFile }}'"
+        echo "envCode=${{ inputs.envCode }}"
+        echo "templatePath=${{ inputs.templatePath }}"
+        echo "templateFile=${{ inputs.templateFile }}"
+        echo "parameterFile=${{ inputs.parameterFile }}"
+        echo "parameterFilePath=${{ env.parameterFilePath }}"
+        echo "parameterFileReplaceTokens=${{ inputs.parameterFileReplaceTokens }}"
+        echo "Files in ${{ env.GITHUB_ACTION_PATH }}"
+        ls ${{ env.GITHUB_ACTION_PATH }}
       continue-on-error: true
 
     - name: Checkout Code
+      if: ${{ inputs.runCreateInfra }}
       uses: actions/checkout@main
 
-    - name: List Files
-      run: 
-        tree ${{ env.GITHUB_ACTION_PATH }}
-      continue-on-error: true
-
+    - name: Replace Tokens
+      if: ${{ inputs.runCreateInfra && inputs.parameterFileReplaceTokens == 'true' }}
+      uses: qetza/replacetokens-action@v1
+      with:
+        sources: '${{ inputs.templatePath }}${{ inputs.parameterFile }}; !local/ => ${{ inputs.parameterFile }}'
+        variables: '[${{ toJSON(vars) }},${{ toJSON(secrets) }}]' # use variables & secrets
+      
     - name: Log into Azure
+      if: ${{ inputs.runCreateInfra }}
       uses: azure/login@v1
       with:
         creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
 
-    - name: Create Resource Group
+    - name: Create Resource Group # not allowed at WLG - use the next section instead
+      if: ${{ inputs.runCreateInfra }}
       run: 
-        az group create --name ${{ env.generatedResourceGroupName }} --location ${{ vars.AZURE_LOCATION }} --tags Environment=${{ inputs.envCode }} Application=${{ vars.APP_NAME }}
+        az group create --name ${{ env.generatedResourceGroupName }} --location ${{ vars.AZURE_LOCATION }} --tags Environment=${{ inputs.envCode }}
+
+      # - name: Azure login
+      #   uses: wlgore/azure-repository-login@v1
+      #   if: ${{ inputs.runCreateInfra }}
+      #   id: azure-login
+      #   with:
+      #     azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}  # this is created by the action - the first time it fails, run again and it works
+      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}                   # need to set this manually
+      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}                               # need to set this manually
+      #     bot-credentials: ${{ secrets.AZURE_REPOSITORY_LOGIN_BOT_CREDENTIALS }}  # org level creds should exist already
+      #     environment: ${{ inputs.environment }}
+      #     location: EastUS
+      #     use-pretty-names: true
 
     - name: Deploy Azure Resources
-      uses: azure/arm-deploy@v1
+      uses: azure/arm-deploy@v2
+      if: ${{ inputs.runCreateInfra }}
+      id: deploy-bicep
       with:
         scope: resourcegroup
         region: ${{ vars.AZURE_LOCATION }}
         resourceGroupName: ${{ env.generatedResourceGroupName }}
-        template: ${{ inputs.templateFile }}
-        parameters: ${{ inputs.parameterFile }}
+        # resourceGroupName: ${{ steps.azure-login.outputs.resource-group }}
+        # deploymentName: ${{ steps.azure-login.outputs.deployment-name }}
+        template: ${{ inputs.templatePath }}${{ inputs.templateFile }}
+        parameters: ${{ env.parameterFilePath }}
+        deploymentMode: ${{ inputs.deploymentMode }} # Must be: Incremental | Complete | Validation
+
+    - name: Display Output
+      if: ${{ inputs.runCreateInfra }}
+      run: |-
+        echo ${{ steps.deploy-bicep.outputs.resourceToken }}
+        echo ${{ steps.deploy-bicep.outputs.hostName }}
+      continue-on-error: true
+
+    - name: Write summary
+      if: ${{ inputs.runCreateInfra }}
+      env:
+        SUMMARY: |
+          # Deployment summary
+          - Target Resource Group: ${{ env.generatedResourceGroupName }}
+          - Link to App URL: [https://${{ steps.deploy-bicep.outputs.hostName }}](https://${{ steps.deploy-bicep.outputs.hostName }})
+          # GitHub Action Variables
+          - Set the GitHub repository variable RESOURCE_TOKEN to: ${{ steps.deploy-bicep.outputs.resourceToken }}
+      run: echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+      continue-on-error: true
+      #  This might work, but you can't use a secret in the url... :(
+      #   #@wlgore.onmicrosoft.com
+      #   #@fdpo.onmicrosoft.com
+      #  - Target Resource Group: [${{ env.generatedResourceGroupName }}](https://portal.azure.com/#@fdpo.onmicrosoft.com/resource/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.generatedResourceGroupName }})
+      # - Link to App in Portal: [${{ steps.deploy-bicep.outputs.appName }}](https://portal.azure.com/#@fdpo.onmicrosoft.com/resource/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.generatedResourceGroupName }}/providers/Microsoft.Web/sites/${{ steps.deploy-bicep.outputs.appName }}/appServices)
