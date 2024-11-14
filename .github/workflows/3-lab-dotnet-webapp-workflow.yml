@@ -5,6 +5,7 @@
 # ------------------------------------------------------------------------------------------------------------------------
 name: 3.dotnet.webapp.workflow
 on: workflow_dispatch
+#on: pull
 
 jobs:
 # ------------------------------------------------------------------------------------------------------------------------
@@ -20,18 +21,18 @@ jobs:
 
 # ------------------------------------------------------------------------------------------------------------------------
   build-app:
-    name: Build Python Function
+    name: Build DotNet WebApp
     uses: ./.github/workflows/template-not-implemented-yet.yml
     needs: create-infra
 
 # ------------------------------------------------------------------------------------------------------------------------
   deploy-app:
-    name: Deploy Python Function
+    name: Deploy DotNet WebApp
     uses: ./.github/workflows/template-not-implemented-yet.yml
     needs: build-app
 
 # ------------------------------------------------------------------------------------------------------------------------
   run-smoke-test:
-    name: Test WebApp
+    name: Test DotNet WebApp
     uses: ./.github/workflows/template-not-implemented-yet.yml
     needs: deploy-app

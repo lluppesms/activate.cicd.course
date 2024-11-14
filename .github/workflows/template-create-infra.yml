@@ -99,23 +99,10 @@ jobs:
       with:
         creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
 
-    - name: Create Resource Group # not allowed at WLG - use the next section instead
+    - name: Create Resource Group
       if: ${{ inputs.runCreateInfra }}
       run: 
         az group create --name ${{ env.generatedResourceGroupName }} --location ${{ vars.AZURE_LOCATION }} --tags Environment=${{ inputs.envCode }}
-
-      # - name: Azure login
-      #   uses: wlgore/azure-repository-login@v1
-      #   if: ${{ inputs.runCreateInfra }}
-      #   id: azure-login
-      #   with:
-      #     azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}  # this is created by the action - the first time it fails, run again and it works
-      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}                   # need to set this manually
-      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}                               # need to set this manually
-      #     bot-credentials: ${{ secrets.AZURE_REPOSITORY_LOGIN_BOT_CREDENTIALS }}  # org level creds should exist already
-      #     environment: ${{ inputs.environment }}
-      #     location: EastUS
-      #     use-pretty-names: true
 
     - name: Deploy Azure Resources
       uses: azure/arm-deploy@v2
@@ -125,8 +112,6 @@ jobs:
         scope: resourcegroup
         region: ${{ vars.AZURE_LOCATION }}
         resourceGroupName: ${{ env.generatedResourceGroupName }}
-        # resourceGroupName: ${{ steps.azure-login.outputs.resource-group }}
-        # deploymentName: ${{ steps.azure-login.outputs.deployment-name }}
         template: ${{ inputs.templatePath }}${{ inputs.templateFile }}
         parameters: ${{ env.parameterFilePath }}
         deploymentMode: ${{ inputs.deploymentMode }} # Must be: Incremental | Complete | Validation
@@ -150,7 +135,6 @@ jobs:
       run: echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
       continue-on-error: true
       #  This might work, but you can't use a secret in the url... :(
-      #   #@wlgore.onmicrosoft.com
       #   #@fdpo.onmicrosoft.com
       #  - Target Resource Group: [${{ env.generatedResourceGroupName }}](https://portal.azure.com/#@fdpo.onmicrosoft.com/resource/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.generatedResourceGroupName }})
-      # - Link to App in Portal: [${{ steps.deploy-bicep.outputs.appName }}](https://portal.azure.com/#@fdpo.onmicrosoft.com/resource/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.generatedResourceGroupName }}/providers/Microsoft.Web/sites/${{ steps.deploy-bicep.outputs.appName }}/appServices)
+      #  - Link to App in Portal: [${{ steps.deploy-bicep.outputs.appName }}](https://portal.azure.com/#@fdpo.onmicrosoft.com/resource/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.generatedResourceGroupName }}/providers/Microsoft.Web/sites/${{ steps.deploy-bicep.outputs.appName }}/appServices)
