@@ -155,13 +155,12 @@ Here is an example of what the output looks like when you run the command with t
 Let's try it now:
 
 ``` bash
-az deployment group create `
+az deployment group what-if `
  --resource-group $resourceGroupName `
  --template-file loganalytics.bicep `
- --parameters loganalytics.bicepparam retentionInDays=60
+--parameters logAnalyticsWorkspaceName=logAnalytics02 retentionInDays=60
 ```
 
-<!-- ------------------------------------------------------------------------------------------ -->
 ---
 
 This completes this lab.
