@@ -1,0 +1,14 @@
+# ----------------------------------------------------------------------------------------------------
+# Variables common to all environments
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - name: azureServiceConnection
+    value: 'Demo Service Connection'
+  - name: resourceGroupName
+    value: 'rg_demo'
+  - name: location
+    value: 'eastus'
+  - name: storageAccountName
+    value: 'xxxdemostorage'
+  - name: storageSku
+    value: 'Standard_LRS'

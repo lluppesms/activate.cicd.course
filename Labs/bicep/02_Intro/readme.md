@@ -84,7 +84,6 @@ az monitor log-analytics workspace delete `
  
 ```
 
-<!-- ------------------------------------------------------------------------------------------ -->
 ---
 
 At this point, we have successfully connected to Azure and deployed a resource using a Bicep template! This completes this lab.

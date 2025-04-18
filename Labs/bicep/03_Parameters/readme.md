@@ -165,4 +165,4 @@ az deployment group what-if `
 
 This completes this lab.
 
-[Next Lab](../04_Conditions_and_Loops/readme.md) | [Previous Lab](../02_Intro/readme.md) | [Table of Contents](./readme.md)
+[Next Lab](../04_Conditions_and_Loops/readme.md) | [Previous Lab](../02_Intro/readme.md) | [Table of Contents](../readme.md#bicep-labs)

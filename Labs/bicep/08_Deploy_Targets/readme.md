@@ -27,9 +27,8 @@ Deploy resources to multiple scopes by using modules:
 Deploying to a Management Group:
 [https://docs.microsoft.com/en-us/learn/modules/deploy-resources-scopes-bicep/7-exercise-deploy-management-group](https://docs.microsoft.com/en-us/learn/modules/deploy-resources-scopes-bicep/7-exercise-deploy-management-group)
 
-<!-- ------------------------------------------------------------------------------------------ -->
 ---
 
 This completes this lab.
 
-[Next Lab](../09_Tips/readme.md) | [Previous Lab](../07_Bicep_Registries/readme.md) | [Table of Contents](./readme.md)
+[Next Lab](../09_Tips/readme.md) | [Previous Lab](../07_Bicep_Registries/readme.md) | [Table of Contents](../readme.md#bicep-labs)

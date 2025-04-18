@@ -1,0 +1,53 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline to automatically trigger a UI Smoke Test from another pipeline in the same project or another project
+# ------------------------------------------------------------------------------------------------------------------------
+# Note -- if this is crossing projects, you have to explicitly set the permissions for this pipeline to access the other project.
+# From: https://learn.microsoft.com/en-us/azure/devops/artifacts/feeds/project-scoped-feeds?view=azure-devops#q-i-want-to-download-a-pipeline-artifact-from-another-project-but-my-pipeline-is-failing
+# Q: I want to download a pipeline artifact from another project but my pipeline is failing?
+# A: If you want to download a pipeline artifact from another project within the same organization,
+#    make sure that the following permissions are set for both your downstream project and the pipeline generating the artifact:
+#    On the pipeline generating the artifact (downstream project): select the ellipsis for more options > Manage security > search 
+#      for your upstream project's build service and allow the following: Update build information, View build pipeline, and View builds.
+#    On the downstream project: Project Settings > Permissions > Users > search for your upstream project's name and then select 
+#      Expand search > select your upstream project's build service and allow the following: View project-level information.
+#      (I didn't see this so I just added the upstream build service as a member of the Project Readers Role)
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+pool:
+  vmImage: windows-latest
+
+# ----------------------------------------------------------------------------------------------------
+parameters:
+  - name: environmentToTest
+    displayName: Environment to Test
+    type: string
+    values:
+      - DEMO
+      - DEV
+      - QA
+      - PROD
+    default: DEMO
+
+# ------------------------------------------------------------------------------------------------------------------------
+resources:
+  pipelines:
+  - pipeline: webapp-pipeline # Internal name of the resource in this YML file
+    source: infra-and-webapp-pipeline # The actual AzDO name of the pipeline that triggers this pipeline
+    project: ProjectTeam1 # Required only if the source pipeline is in another project
+    trigger: true # Run this pipeline when any run of the source pipeline completes
+    
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - template: vars/var-common-01.yml
+
+# ----------------------------------------------------------------------------------------------------
+stages:
+- stage: UITestWebApp
+  displayName: UI Test ${{ parameters.environmentToTest }}
+  jobs:
+  - template: templates/template-playwright.yml
+    parameters:
+      environment: ${{ parameters.environmentToTest }}
+      testType: ${{ variables.playwrightUITestType }}
+      testPath: ${{ variables.playwrightUITestPath }}
+      debug: true

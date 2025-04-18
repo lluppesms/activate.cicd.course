@@ -1,0 +1,8 @@
+*.json
+*.ps1
+!main-web-app.parameters.azdo.json
+!main-web-app.parameters.gha.json
+!bicepconfig.json
+!resourceAbbreviations.json
+*.bicepTest
+test.bicep

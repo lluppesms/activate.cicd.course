@@ -22,7 +22,7 @@ This is a great way to start if you have a resource in Azure but do not have a B
 
 ![Get Resource Id](img/CreatingBicep_01.png)
 
-Once you have that, return to VS Code, popup the command pallette and select the “Bicep: Insert Resource…” command and paste your Resource Id:
+Once you have that, return to VS Code, popup the command pallette and select the “Bicep: Insert Resource…” command, select the `./05/Migrate_to_Bicep/exportedResource.bicep` file as the target, and paste your Resource Id:
 
 ![Use Resource Id](img/CreatingBicep_02.png)
 
@@ -40,7 +40,7 @@ You can also go into the Azure Portal and export a resource template for an exis
 
 You can use the download link on this page, or just copy/paste the JSON for use in VS Code. Go ahead and copy this code and we will use it in the next section.
 
-Create a new file in VS Code and paste the JSON into it and save it as exportedResource.json.
+Create a new file in VS Code and paste the JSON into it and save it as `./05/Migrate_to_Bicep/exportedResource.json`.
 
 ---
 
@@ -58,7 +58,13 @@ You have multiple options in VS Code to convert ARM JSON templates to Bicep - gi
 
 - Anywhere in any folder where you have a JSON ARM template, you can use the `az bicep decompile` command line command to convert it to Bicep
 
-Open a terminal, navigate to the folder where you saved the JSON file and then run this command:
+Open the Terminal and change the directory to the one where the Bicep file is located, using a command similar to the following:
+
+``` bash
+cd ..\05_Migrate_to_Bicep\
+```
+
+Run this command to convert the JSON file to Bicep:
 
 ```bash
 az bicep decompile -f exportedResource.json
@@ -89,9 +95,8 @@ If you want to explore more on this with VMs and VNETs, you can follow these lab
 
 - [MS Learn - Intermediate Bicep Exercise - Test and deploy your converted template](https://learn.microsoft.com/en-us/training/modules/migrate-azure-resources-bicep/7-exercise-test-deploy-converted-template)
 
-<!-- ------------------------------------------------------------------------------------------ -->
 ---
 
 This completes this lab.
 
-[Next Lab](../06_Modules/readme.md) | [Previous Lab](../04_Conditions_and_Loops/readme.md) | [Table of Contents](./readme.md)
+[Next Lab](../06_Modules/readme.md) | [Previous Lab](../04_Conditions_and_Loops/readme.md) | [Table of Contents](../readme.md#bicep-labs)

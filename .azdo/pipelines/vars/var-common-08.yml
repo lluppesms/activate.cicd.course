@@ -1,0 +1,25 @@
+# ----------------------------------------------------------------------------------------------------
+# Variables common to all environments
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - name: azureServiceConnection
+    value: 'Demo Service Connection'
+  - name: resourceGroupPrefix
+    value: 'rg_demo_dadabase'
+  - name: location
+    value: 'eastus'
+
+  - name: appName
+    value: 'xxx-DadABase' 
+  - name: applicationTitle
+    value: 'Dadabase Demo'
+
+  - name: webSiteSku 
+    value: 'B1'
+  - name: storageSku 
+    value: 'Standard_LRS'
+
+  - name: storageAccountName
+    value: 'xxxdemostorage'
+  - name: storageSku
+    value: 'Standard_LRS'

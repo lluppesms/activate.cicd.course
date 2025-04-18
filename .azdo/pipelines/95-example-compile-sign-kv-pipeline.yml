@@ -1,0 +1,42 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline to Compile a SFE Executable and sign it with a Cert from a Key Vault
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+pool:
+  vmImage: ubuntu-latest
+
+# ------------------------------------------------------------------------------------------------------------------------
+trigger:
+ - none
+
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - group: DurableDemo
+
+# ----------------------------------------------------------------------------------------------------
+stages:
+- stage: ScanApplication
+  displayName: Scan Application
+  jobs:
+  - template: templates/template-scan-code.yml
+    parameters:
+      environmentName: 'DEV'
+      runMSDevSecOpsScan: true
+      runGHASScan: false
+
+# ----------------------------------------------------------------------------------------------------
+- stage: BuildApplication
+  displayName: Build Application
+  jobs:
+  - template: templates/template-console-app-build.yml
+    parameters:
+      environmentName: 'DEV'
+
+# ----------------------------------------------------------------------------------------------------
+- stage: DeployApplication
+  displayName: Deploy Application
+  jobs:
+  - template: templates/template-console-app-deploy.yml
+    parameters:
+      environmentName: 'DEV'
+

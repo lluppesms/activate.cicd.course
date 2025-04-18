@@ -22,6 +22,12 @@ Your Bicep file should now looks like this:
 
 ![Sample Bicep](img/Conditional_01.png)
 
+To begin this lab, open the Terminal and change the directory to the one where the Bicep file is located, using a command similar to the following:
+
+``` bash
+cd ..\04_Conditions_and_Loops\
+```
+
 Try deploying the file with the `deployResource` parameter set to false, so it will NOT deploy a resource:
 
 ``` bash
@@ -107,9 +113,8 @@ You can see your outputs in the command line window, but you can also view these
 
 ![Bicep Outputs](img/Outputs_01.png)
 
-<!-- ------------------------------------------------------------------------------------------ -->
 ---
 
 This completes this lab.
 
-[Next Lab](../05_Migrate_to_Bicep/readme.md) | [Previous Lab](../03_Parameters/readme.md) | [Table of Contents](./readme.md)
+[Next Lab](../05_Migrate_to_Bicep/readme.md) | [Previous Lab](../03_Parameters/readme.md) | [Table of Contents](../readme.md#bicep-labs)

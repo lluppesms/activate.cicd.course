@@ -1,0 +1,160 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline example that creates variables that can be passed across jobs, in a deployment or not in a deployment.
+# ------------------------------------------------------------------------------------------------------------------------
+# References:
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/process/variables#set-a-multi-job-output-variable
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/process/expressions#dependencies
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/process/expressions#deployment-job-output-variables
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs#support-for-output-variables
+# ------------------------------------------------------------------------------------------------------------------------
+pool:
+ vmImage: ubuntu-latest
+
+variables:
+  - name: resourceGroupPrefix
+    value: 'rg-example'
+  - name: mainBicepFilePrefix
+    value: '01-main'
+  - name: environmentName
+    value: 'dev'
+
+stages:
+  - stage: setupStageWithDeploy
+    displayName: Setup With Deployment
+    jobs:
+      - job: setupJob
+        displayName: Jobs with Deployment
+      - deployment: SetupDeploy
+        displayName: Setup Job w/ Deploy
+        environment: 
+          name: ${{ variables.environmentName }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: PowerShell@2
+                  name: createVariables
+                  displayName: Create Variables
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      $resourceGroupName1="$(resourceGroupPrefix)"
+                      $resourceGroupName2="$(echo "$resourceGroupName1-${{ variables.environmentName}}" | tr '[:upper:]' '[:lower:]')"
+                      $resourceGroupNameOut="$resourceGroupName2"
+                      echo "##vso[task.setvariable variable=resourceGroupNameOut;isOutput=true]$resourceGroupName2"
+                      Write-Output "-- Resource Group Set -------------------------------------------------------"
+
+                      $mainBicepFile1="$(mainBicepFilePrefix)"
+                      $mainBicepFile2="$(echo "$mainBicepFile1.${{ variables.environmentName}}.bicepparam" | tr '[:upper:]' '[:lower:]')"
+                      $mainBicepFileOut="$mainBicepFile2"
+                      echo "##vso[task.setvariable variable=mainBicepFileOut;isOutput=true]$mainBicepFile2"
+                      Write-Output "-- Bicep File Set -------------------------------------------------------"
+                      Write-Output " "
+                      Write-Output "---------------------------------------------------------"           
+                      Write-Output " Environment selected: ${{ variables.environmentName}}"
+                      Write-Output " "
+                      Write-Output " resourceGroupPrefix: $(resourceGroupPrefix)"
+                      Write-Output " resourceGroupName1: $resourceGroupName1"
+                      Write-Output " resourceGroupName2: $resourceGroupName2"
+                      Write-Output " resourceGroupNameOut: $resourceGroupNameOut"
+                      Write-Output " "
+                      Write-Output " mainBicepFilePrefix: $(mainBicepFilePrefix)"
+                      Write-Output " mainBicepFile1: $mainBicepFile1"
+                      Write-Output " mainBicepFile2: $mainBicepFile2"
+                      Write-Output " mainBicepFileOut: $mainBicepFileOut"
+                      Write-Output "---------------------------------------------------------"           
+
+     # ------------------------------------------------------------------------------------------------------------------------
+      - job: dependentJob
+        displayName: Dependent Job
+        dependsOn: SetupDeploy # without this the jobs will run in parallel and won't be set
+        variables:
+            dependencyInfo: $[convertToJson(dependencies)] # variable that lists all the job dependency info
+            passedResourceGroupName: $[ dependencies.SetupDeploy.outputs['SetupDeploy.createVariables.resourceGroupNameOut'] ]
+            passedMainBicepFile: $[ dependencies.SetupDeploy.outputs['SetupDeploy.createVariables.mainBicepFileOut'] ]
+
+        steps:
+          - task: Bash@3
+            displayName: Display Variables
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo "---------------------------------------------------------"           
+                echo "Pipeline resourceGroupPrefix: $(resourceGroupPrefix)"
+                echo "Pipeline mainBicepFilePrefix: $(mainBicepFilePrefix)"
+                echo "Pipeline environmentName: $(environmentName)" 
+                echo "---------------------------------------------------------"           
+                echo "passedResourceGroupName: $(passedResourceGroupName)"
+                echo "passedMainBicepFile: $(passedMainBicepFile)"
+                echo "---------------------------------------------------------"           
+                echo "##[group]Display Dependency Info:"
+                echo "$(dependencyInfo)"
+                echo "##[endgroup]"
+                echo "---------------------------------------------------------"           
+                echo "##[group]Display All Environment Variables:"
+                printenv | sort
+                echo "##[endgroup]"
+
+  # ------------------------------------------------------------------------------------------------------------------------
+  - stage: setupStageNoDeploy
+    displayName: Setup - No Deployment
+    jobs:
+      - job: setupJobNoDeploy
+        displayName: Job With No Deployments
+        steps:
+          - task: PowerShell@2
+            name: createVariables
+            displayName: Create Variables
+            inputs:
+              targetType: 'inline'
+              script: |
+                $ResourceGroupName1="$(resourceGroupPrefix)"
+                $ResourceGroupName2="$(echo "$ResourceGroupName1-${{ variables.EnvironmentName}}" | tr '[:upper:]' '[:lower:]')"
+                $ResourceGroupNameOut="$ResourceGroupName2"
+                echo "##vso[task.setvariable variable=ResourceGroupNameOut;isOutput=true]$ResourceGroupName2"
+                Write-Output "-- Resource Group Set -------------------------------------------------------"
+
+                $mainBicepFile1="$(mainBicepFilePrefix)"
+                $mainBicepFile2="$(echo "$mainBicepFile1.${{ variables.EnvironmentName}}.bicepparam" | tr '[:upper:]' '[:lower:]')"
+                $mainBicepFileOut="$mainBicepFile2"
+                echo "##vso[task.setvariable variable=mainBicepFileOut;isOutput=true]$mainBicepFile2"
+                Write-Output "-- Bicep File Set -------------------------------------------------------"
+                Write-Output " "
+                Write-Output "---------------------------------------------------------"           
+                Write-Output " Environment selected: ${{ variables.EnvironmentName}}"
+                Write-Output " "
+                Write-Output " resourceGroupPrefix: $(resourceGroupPrefix)"
+                Write-Output " ResourceGroupName1: $ResourceGroupName1"
+                Write-Output " ResourceGroupName2: $ResourceGroupName2"
+                Write-Output " ResourceGroupNameOut: $ResourceGroupNameOut"
+                Write-Output " "
+                Write-Output " mainBicepFilePrefix: $(mainBicepFilePrefix)"
+                Write-Output " mainBicepFile1: $mainBicepFile1"
+                Write-Output " mainBicepFile2: $mainBicepFile2"
+                Write-Output " mainBicepFileOut: $mainBicepFileOut"
+                Write-Output "---------------------------------------------------------"           
+
+      # ------------------------------------------------------------------------------------------------------------------------
+      - job: dependentJob
+        displayName: Dependent Job
+        dependsOn: setupJobNoDeploy # without this the jobs will run in parallel and won't be set
+        variables:
+            passedResourceGroupName: $[ dependencies.setupJobNoDeploy.outputs['createVariables.ResourceGroupNameOut'] ]
+            passedBicepFileName: $[ dependencies.setupJobNoDeploy.outputs['createVariables.mainBicepFileOut'] ]
+        steps:
+          - task: Bash@3
+            displayName: Display Variables
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo "---------------------------------------------------------"           
+                echo "Pipeline resourceGroupPrefix: $(resourceGroupPrefix)"
+                echo "Pipeline mainBicepFilePrefix: $(mainBicepFilePrefix)"
+                echo "Pipeline EnvironmentName: $(EnvironmentName)" 
+                echo "---------------------------------------------------------"           
+                echo "passedResourceGroupName: $(passedResourceGroupName)"
+                echo "passedBicepFileName: $(passedBicepFileName)"
+                echo "---------------------------------------------------------"           
+                echo "##[group]Display All Environment Variables:"
+                printenv | sort
+                echo "##[endgroup]"

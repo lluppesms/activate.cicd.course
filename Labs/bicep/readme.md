@@ -43,12 +43,12 @@ This workshop will cover a series of labs, in which you will learn to create eff
 
 ### Advanced Bicep
 
-* [Lab 8 - Deploy Resources to Multiple Scopes](./Bicep_9_Deploy_Resource_Targets/readme.md)
-* [Lab 9 - Tips and Tricks](./Bicep_10_Advanced_Bicep_Tips/readme.md)
+* [Lab 8 - Deploy Resources to Multiple Scopes](./08_Deploy_Targets/readme.md)
+* [Lab 9 - Tips and Tricks](./09_Tips/readme.md)
 
 <!-- * [Lab 99 - Publish Reusable Code with Template Specs](./archives/99_Bicep_Template_Specs/readme.md) -->
 <!-- * [Lab 98 - CICD Pipelines](./archives/98_CICD_Pipelines/readme.md) -->
 
 ---
 
-[Table of Contents](../../readme.md)
+[Repository Home Page](../../readme.md)

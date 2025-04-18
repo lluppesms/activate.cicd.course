@@ -1,0 +1,24 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# 3. Pipeline to deploy Bicep Resources with values in a variable file
+# ------------------------------------------------------------------------------------------------------------------------
+trigger: none
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+ - job:
+   displayName: Deploy Bicep
+
+   variables:
+     - template: vars/var-common-01.yml
+
+   steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        azureResourceManagerConnection: 'Demo Service Connection'
+        resourceGroupName: $(resourceGroupName)
+        location: $(location)
+        csmFile: '$(bicepPath)/$(bicepFileName)'
+        overrideParameters: >
+          -storageAccountName $(storageAccountName)
+          -storageSku $(storageSku)

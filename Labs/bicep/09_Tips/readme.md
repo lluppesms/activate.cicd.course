@@ -101,7 +101,6 @@ az deployment group create `
 
 ---
 
-<!-- ------------------------------------------------------------------------------------------ -->
 This completes this lab.
 
-[Previous Lab](../08_Deploy_Targets/readme.md) | [Table of Contents](./readme.md)
+[Previous Lab](../08_Deploy_Targets/readme.md) | [Table of Contents](../readme.md#bicep-labs)

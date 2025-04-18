@@ -6,6 +6,12 @@ The `logAnalytics.bicep` file in this folder is the same exact format that we ha
 
 In this lab we will re-use that file as a module, and include it in another bicep.bicep file, but when doing so, we will now reference that file using the `module` keyword.
 
+To begin this lab, open the Terminal and change the directory to the one where the Bicep file is located, using a command similar to the following:
+
+``` bash
+cd ..\06_Modules\
+```
+
 Open the main-local-module.bicep file in this folder and look at the contents.  At the bottom of the file insert this new block of code.
 
 ``` bicep
@@ -167,9 +173,8 @@ az deployment group create `
 
 ```
 
-<!-- ------------------------------------------------------------------------------------------ -->
 ---
 
 This completes this lab.
 
-[Next Lab](../07_Bicep_Registries/readme.md) | [Previous Lab](../05_Migrate_to_Bicep/readme.md) | [Table of Contents](./readme.md)
+[Next Lab](../07_Bicep_Registries/readme.md) | [Previous Lab](../05_Migrate_to_Bicep/readme.md) | [Table of Contents](../readme.md#bicep-labs)

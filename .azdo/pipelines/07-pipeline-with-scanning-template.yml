@@ -1,0 +1,38 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# 7. Pipeline calling a reusable template, adding source scanning stages
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+
+trigger: none
+
+pool:
+  #vmImage: ubuntu-latest
+  name: ubuntu_aca
+
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - template: vars/var-common-02.yml
+
+# ----------------------------------------------------------------------------------------------------
+parameters:
+  - name: runGHASScan
+    displayName: Run GHAS Scan
+    type: boolean
+    default: true
+  - name: runMSDevSecOpsScan
+    displayName: Run MS DevSecOps Scan
+    type: boolean
+    default: true
+
+# ----------------------------------------------------------------------------------------------------
+stages:
+  - template: templates/07-template-scan-code.yml
+    parameters:
+      runMSDevSecOpsScan: ${{ parameters.runMSDevSecOpsScan }}
+      runGHASScan: ${{ parameters.runGHASScan }}
+
+  - template: templates/07-template-deploy-bicep.yml
+    parameters:
+      bicepPath: 'Labs/yml/09_Full_CICD_Pipelines/bicep'
+      bicepFile: 'storageaccount.bicep'
+      parameterFile: 'storageaccount-variables.bicepparam'

@@ -1,0 +1,38 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline Template to deploy Azure Resources Only
+# ------------------------------------------------------------------------------------------------------------------------
+parameters:
+- name: environments
+  type: object
+  default: ['DEV']
+- name: singleEnvironment
+  default: 'false'
+- name: runGHASScan
+  default: 'false'
+- name: runMSDevSecOpsScan
+  default: 'false'
+
+# ----------------------------------------------------------------------------------------------------
+stages:
+- stage: ScanApplication
+  displayName: Scan Application
+  jobs:
+  - template: templates/template-scan-code.yml
+    parameters:
+      environmentName: 'DEV'
+      runMSDevSecOpsScan: ${{ parameters.runMSDevSecOpsScan }}
+      runGHASScan: ${{ parameters.runGHASScan }}
+
+# ----------------------------------------------------------------------------------------------------
+- ${{ each environmentName in parameters.environments }}:
+  - stage: CreateInfra${{ environmentName }}
+    # This complex condition is essentially this:
+    #   scan completed and a single environment is being deployed
+    #   -or- the environment is 'dev'
+    #   -or- if qa/prod, the previous stage (dev->qa or qa->prod) succeeded
+    condition: or(eq(${{ parameters.singleEnvironment }}, 'true'), and(eq(upper('${{ environmentName }}'), 'DEV'), succeeded('ScanApplication')), and(eq(upper('${{ environmentName }}'), 'QA'), succeeded('CreateInfraDEV')), and(eq(upper('${{ environmentName }}'), 'PROD'), succeeded('CreateInfraQA')))
+    displayName: Create ${{ environmentName }} Resources
+    jobs:
+    - template: templates/98-template-create-infra.yml
+      parameters:
+        environmentName: ${{ environmentName }}
