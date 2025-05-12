@@ -16,7 +16,7 @@ If you need a Build Agent for this class, you can refer to the [Creating a Custo
 
 ## Labs
 
-* [Clone the Class Repository](./Labs/setup/3-Clone-Repo.md)
+* [Clone the Class Repository](./Labs/setup/4-clone-Repo.md)
 
 * [Bicep Labs](./Labs/bicep/readme.md)
 

@@ -6,7 +6,7 @@ You will need an Azure DevOps Organization and Project in order to complete this
 
 Once we proceed to the Bicep part of the course, you will also want an editor like VS Code to edit the YML and Bicep files, and a few key extensions to make things better. See the [Visual Studio Code Setup](../setup//3-Visual-Studio-Code.md) document for more information.
 
-If you have not created your own repository for the class based on the course materials, please follow the instructions in the [Import the Class Repository](../setup/3-Clone-Repo.md) guide.
+If you have not created your own repository for the class based on the course materials, please follow the instructions in the [Import the Class Repository](../setup/4-clone-Repo.md) guide.
 
 If you need a Build Agent for this class for some reason, you can refer to the [Creating a Custom Build Agent](../build-agents/desktop-runner/readme.md) document to assist you in creating it. You can use the default of the Microsoft Hosted Agents, but if you have a large class it may be better to each have your own custom custom agent.
 
@@ -18,7 +18,7 @@ This workshop will cover a series of labs, in which you will learn to create eff
 
 * [Lab 0.1 - Setting up an Azure DevOps Project](../setup/1-Create-Azdo-Project.md)
 * [Lab 0.2 - Tooling with Visual Studio Code](../setup/3-Visual-Studio-Code.md)
-* [Lab 0.3 - Import the Class Repository](../setup/3-Clone-Repo.md)
+* [Lab 0.3 - Import the Class Repository](../setup/4-clone-Repo.md)
 * [Lab 0.4 - Creating a Custom Build Agent (optional)](../build-agents/desktop-runner/readme.md)
 
 ### Introduction To Pipelines

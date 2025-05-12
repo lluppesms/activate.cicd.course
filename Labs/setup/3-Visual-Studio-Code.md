@@ -54,7 +54,7 @@ To verify your VS Code Bicep extension is working:
 
 Some other useful extensions you might want to install for Infrastructure as Code development:
   
-  ![VS Code Extensions](img/220_vscode_Extensions.png)
+  ![VS Code Extensions](img/220_vscode_extensions.png)
 
 > Note: make sure to get the extensions from Microsoft with the verified domain (the blue star icon) as there will be lots of other extensions with similar names!
 

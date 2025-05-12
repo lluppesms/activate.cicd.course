@@ -2,7 +2,7 @@
 
 ## Setup Steps
 
-* If you have not created your own repository for this class based on the course materials, please follow the instructions in the [Import the Class Repository](../../setup/3-Clone-Repo.md) guide.
+* If you have not created your own repository for this class based on the course materials, please follow the instructions in the [Import the Class Repository](../../setup/4-clone-Repo.md) guide.
 
 ---
 
