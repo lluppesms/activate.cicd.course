@@ -1,0 +1,15 @@
+# ----------------------------------------------------------------------------------------------------
+# Code Scanning Template
+# ----------------------------------------------------------------------------------------------------
+jobs:
+- job: DevSecOpsScanJob
+  displayName: DevSecOps Scan Job 
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Use dotnet 8.0'
+    inputs:
+      version: 8.0.x
+
+  - task: MicrosoftSecurityDevOps@1
+    displayName: 'Run Microsoft Security DevOps'
+    continueOnError: true

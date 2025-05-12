@@ -1,0 +1,4 @@
+resource_group_name  = "#{tfStateResourceGroup}#"
+storage_account_name = "#{tfStateStorageAccount}#"
+container_name       = "#{appName}#--tfstate"
+key                  = "#{appName}#-#{env}#-tfstate"

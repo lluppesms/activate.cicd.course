@@ -1,0 +1,7 @@
+variables:
+  - name: bicepPath
+    value: '/infra/bicep'
+  - name: bicepFileName
+    value: 'main-app.bicep'
+  - name: bicepParameterFileName
+    value: 'main-app.bicepparam'

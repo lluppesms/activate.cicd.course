@@ -1,0 +1,35 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline Steps Template -- steps to replace varibles in files
+# ------------------------------------------------------------------------------------------------------------------------
+parameters:
+  - name: backendConfigFileFullPath
+    default: ''
+
+steps:
+- task: qetza.replacetokens.replacetokens-task.replacetokens@5
+  displayName: Update Parameter Files
+  inputs:
+    targetFiles: $(configWorkingDirectory)/*.*
+    tokenPrefix: '#{'
+    tokenSuffix: '}#'
+    
+- task: CmdLine@2
+  displayName: Display Parameter File Contents
+  continueOnError: true
+  inputs:
+    script: |
+      echo "##[group]Contents of File ${{ parameters.backendConfigFileFullPath }}"
+      cat ${{ parameters.backendConfigFileFullPath }}
+      echo "##[endgroup]"
+      echo "##[group]Contents of File parameters.auto.tfvars"
+      cat $(configWorkingDirectory)/parameters.auto.tfvars
+      echo "##[endgroup]"
+      echo "##[group]Contents of File applicationinsights.auto.tfvars"
+      cat $(configWorkingDirectory)/applicationinsights.auto.tfvars
+      echo "##[endgroup]"
+      echo "##[group]Contents of File appserviceplan.auto.tfvars"
+      cat $(configWorkingDirectory)/appserviceplan.auto.tfvars
+      echo "##[endgroup]"
+      echo "##[group]Contents of File resourcegroups.auto.tfvars"
+      cat $(configWorkingDirectory)/resourcegroups.auto.tfvars
+      echo "##[endgroup]"

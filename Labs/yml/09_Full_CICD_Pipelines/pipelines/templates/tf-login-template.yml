@@ -1,0 +1,14 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline Steps Template -- steps to login to Azure CLI for Terraform
+# ------------------------------------------------------------------------------------------------------------------------
+steps:
+- task: AzureCLI@2
+  displayName: Azure CLI Login
+  inputs:
+    azureSubscription: $(serviceConnectionName)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az --version
+      az account show
+

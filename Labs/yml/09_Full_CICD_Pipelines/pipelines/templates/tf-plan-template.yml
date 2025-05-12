@@ -1,0 +1,99 @@
+# ----------------------------------------------------------------------------------------------------
+# Reusable template to run a Terraform Init and Plan
+# ----------------------------------------------------------------------------------------------------
+# This variable group is needed in Azure DevOps:
+#    az pipelines variable-group create 
+#      --organization=https://dev.azure.com/<yourAzDOOrg>/ 
+#      --project='<yourAzDOProject>' 
+#      --name TF-Var-Group-1 
+#      --variables 
+#          tfStateResourceGroup='<yourValue>'                   <-- like rg-tf-state-ado
+#          tfStateStorageAccount='<globallyUniqueStorageName>'  <-- globally unique name for storage account
+# ----------------------------------------------------------------------------------------------------
+parameters:
+- name: env
+  type: string
+- name: serviceConnectionName
+  type: string
+
+- name: terraFormPath
+  default: '/infra/tf'
+  type: string
+
+- name: scriptsFolderName
+  default: 'scripts'
+  type: string
+- name: configFolderName
+  default: 'config'
+  type: string
+
+- name: backendConfigFileName
+  type: string
+  default: 'dynamic.backend.tfbackend'
+
+# ----------------------------------------------------------------------------------------------------
+jobs:
+- job: Terraform_Plan_${{ parameters.env }}
+  displayName: 'Terraform Plan - ${{ parameters.env }}'
+
+  variables:
+    - group: TF-Var-Group-1
+    - template: ../vars/var-common.yml
+    - ${{ if eq(lower(parameters.env), 'dev') }}:
+      - template: ../vars/var-dev.yml
+    - ${{ if eq(lower(parameters.env), 'prod') }}:
+      - template: ../vars/var-prod.yml
+
+    - name: env
+      value: ${{ parameters.env }}
+
+    - name: scriptsFolder
+      value: '${{ parameters.terraFormPath }}/${{ parameters.scriptsFolderName }}'
+    - name: scriptsWorkingDirectory
+      value: '$(Build.SourcesDirectory)$(scriptsFolder)'
+
+    - name: configFolder
+      value: '${{ parameters.terraFormPath }}/${{ parameters.configFolderName }}'
+    - name: configWorkingDirectory
+      value: '$(Build.SourcesDirectory)$(configFolder)'
+
+    - name: backendConfigFileFullPath
+      value: '$(configWorkingDirectory)/${{ parameters.backendConfigFileName }}' 
+
+    - name: requestorName
+      value: '$(Build.RequestedFor)'
+    - name: requestorEmail
+      value: '$(Build.RequestedForEmail)'
+
+  # ----------------------------------------------------------------------------------------------------
+  steps:
+  - checkout: self
+
+  - template: tf-display-info-template.yml
+
+  - template: tf-replace-variables-template.yml
+    parameters:
+      backendConfigFileFullPath: $(backendConfigFileFullPath)
+
+  - template: tf-init-template.yml
+
+  - task: AzureCLI@2
+    displayName: Create TF Plan
+    inputs:
+      azureSubscription: $(serviceConnectionName)
+      scriptType: bash
+      scriptLocation: inlineScript
+      workingDirectory: $(scriptsWorkingDirectory)
+      inlineScript: |
+        echo "Executing: terraform plan -var-file=$(configWorkingDirectory)/*.tfvars"
+        find $(configWorkingDirectory) -name "*.tfvars" -exec echo   -var-file={} \;
+        terraform plan $(find $(configWorkingDirectory) -name "*.tfvars" -exec echo -var-file={} \;) -out tfplan
+        terraform show -json tfplan > tfplan.json
+
+  - task: PublishBuildArtifacts@1
+    displayName: Save TF Plan
+    inputs:
+      PathtoPublish: '$(scriptsWorkingDirectory)/tfplan'
+      ArtifactName: 'tfplan'
+
+  - template: tf-display-info-template.yml

@@ -1,0 +1,22 @@
+# ------------------------------------------------------------------------------------------------------------------------
+# Pipeline Steps Template -- steps to install and initialize Terraform
+# ------------------------------------------------------------------------------------------------------------------------
+steps:
+- task: TerraformInstaller@0
+  displayName: Install Terraform
+  inputs:
+    terraformVersion: 'latest'
+
+- task: AzureCLI@2
+  displayName: Terraform Init
+  inputs:
+    azureSubscription: $(serviceConnectionName)
+    scriptType: bash
+    scriptLocation: inlineScript
+    workingDirectory: $(scriptsWorkingDirectory)
+    inlineScript: |
+      echo "##[group]Contents of Config File $(backendConfigFileFullPath)"
+      cat $(backendConfigFileFullPath)
+      echo "##[endgroup]"
+      echo "Executing: terraform init -backend-config=$(backendConfigFileFullPath)"
+      terraform init -backend-config=$(backendConfigFileFullPath)

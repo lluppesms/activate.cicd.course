@@ -1,0 +1,11 @@
+variables:
+  - name: appFolderName
+    value: 'src/MyApp'
+  - name: appSolutionName
+    value: 'MyApp.Web'
+  - name: appProjectName
+    value: 'MyProject.Web'
+  - name: testFolderName 
+    value: 'src/MyApp/MyApp.Tests'
+  - name: testProjectName
+    value: 'MyApp.Tests'

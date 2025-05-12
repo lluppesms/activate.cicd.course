@@ -7,3 +7,7 @@
 variables:
   - name: environmentSpecificWebAppName
     value: ''
+  - name: skuTier
+    value: 'Standard'
+  - name: skuSize
+    value: 'F1'

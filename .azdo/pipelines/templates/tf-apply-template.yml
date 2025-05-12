@@ -1,0 +1,135 @@
+# ----------------------------------------------------------------------------------------------------
+# Reusable template to run a Terraform Apply -- either building a plan or using an existing plan
+# ----------------------------------------------------------------------------------------------------
+# This variable group is needed in Azure DevOps:
+#    az pipelines variable-group create 
+#      --organization=https://dev.azure.com/<yourAzDOOrg>/ 
+#      --project='<yourAzDOProject>' 
+#      --name TF-Var-Group-1 
+#      --variables 
+#          tfStateResourceGroup='<yourValue>'                   <-- like rg-tf-state-ado
+#          tfStateStorageAccount='<globallyUniqueStorageName>'  <-- globally unique name for storage account
+# ----------------------------------------------------------------------------------------------------
+parameters:
+- name: env
+  type: string
+- name: serviceConnectionName
+  type: string
+- name: pipelineResourceIdentifier # supplied if this is deployed with artifacts from another pipeline
+  default: '' # internal identifier for the resource
+
+- name: terraFormPath
+  default: '/infra/tf'
+  type: string
+
+- name: scriptsFolderName
+  default: 'scripts'
+  type: string
+- name: configFolderName
+  default: 'config'
+  type: string
+
+- name: backendConfigFileName
+  type: string
+  default: 'dynamic.backend.tfbackend'
+
+# ----------------------------------------------------------------------------------------------------
+jobs:
+- deployment: Initialize_Terraform_${{ parameters.env }}
+  displayName: InitializeTerraform_${{ parameters.env }}
+  environment: ${{ parameters.env }}
+
+- job: Terraform_Apply_${{ parameters.env }}
+  displayName: 'Terraform Apply - ${{ parameters.env }}'
+
+  variables:
+    - group: TF-Var-Group-1
+    - template: ../vars/var-common.yml
+    - ${{ if eq(lower(parameters.env), 'dev') }}:
+      - template: ../vars/var-dev.yml
+    - ${{ if eq(lower(parameters.env), 'prod') }}:
+      - template: ../vars/var-prod.yml
+
+    - name: env
+      value: ${{ parameters.env }}
+
+    - name: pipelineResourcePath
+      value: '$(Pipeline.Workspace)/${{ parameters.pipelineResourceIdentifier }}'
+    - name: pipelineResourceDropPath
+      value: '$(Pipeline.Workspace)/${{ parameters.pipelineResourceIdentifier }}/tfplan'
+
+    - name: scriptsFolder
+      value: '${{ parameters.terraFormPath }}/${{ parameters.scriptsFolderName }}'
+    - name: scriptsWorkingDirectory
+      value: '$(Build.SourcesDirectory)$(scriptsFolder)'
+
+    - name: configFolder
+      value: '${{ parameters.terraFormPath }}/${{ parameters.configFolderName }}'
+    - name: configWorkingDirectory
+      value: '$(Build.SourcesDirectory)$(configFolder)'
+
+    - name: backendConfigFileFullPath
+      value: '$(configWorkingDirectory)/${{ parameters.backendConfigFileName }}' 
+
+    - name: requestorName
+      value: '$(Build.RequestedFor)'
+    - name: requestorEmail
+      value: '$(Build.RequestedForEmail)'
+
+  # ----------------------------------------------------------------------------------------------------
+  steps:
+  - checkout: self
+
+  - template: tf-display-info-template.yml
+
+  - template: tf-replace-variables-template.yml
+    parameters:
+      backendConfigFileFullPath: $(backendConfigFileFullPath)
+
+  - template: tf-init-template.yml
+
+  # ----------------------------------------------------------------------------------------------------
+  # if a Pipeline Resource WAS supplied (previously built elsewhere), then copy it over and show info
+  # ----------------------------------------------------------------------------------------------------
+  - ${{ if ne(parameters.pipelineResourceIdentifier, '') }}:
+    - template: tf-download-artifacts-template.yml
+      parameters:
+        pipelineResourceIdentifier: ${{ parameters.pipelineResourceIdentifier }}
+
+  # ----------------------------------------------------------------------------------------------------
+  # if a Pipeline Resource was NOT supplied, then just build the TF Plan inline
+  # ----------------------------------------------------------------------------------------------------
+  - ${{ if eq(parameters.pipelineResourceIdentifier, '') }}:
+    - task: AzureCLI@2
+      displayName: Create TF Plan
+      inputs:
+        azureSubscription: $(serviceConnectionName)
+        scriptType: bash
+        scriptLocation: inlineScript
+        workingDirectory: $(scriptsWorkingDirectory)
+        inlineScript: |
+          echo "Executing: terraform plan -var-file=$(configWorkingDirectory)/*.tfvars"
+          find $(configWorkingDirectory) -name "*.tfvars" -exec echo   -var-file={} \;
+          terraform plan $(find $(configWorkingDirectory) -name "*.tfvars" -exec echo -var-file={} \;) -out tfplan
+
+  - task: AzureCLI@2
+    displayName: Show TF Plan
+    inputs:
+      azureSubscription: $(serviceConnectionName)
+      scriptType: bash
+      scriptLocation: inlineScript
+      workingDirectory: $(scriptsWorkingDirectory)
+      inlineScript: |
+        echo "Executing: terraform show tfplan"
+        terraform show tfplan
+
+  - task: AzureCLI@2
+    displayName: Apply TF Plan
+    inputs:
+      azureSubscription: $(serviceConnectionName)
+      scriptType: bash
+      scriptLocation: inlineScript
+      workingDirectory: $(scriptsWorkingDirectory)
+      inlineScript: |
+        echo "Executing: terraform apply tfplan"
+        terraform apply tfplan

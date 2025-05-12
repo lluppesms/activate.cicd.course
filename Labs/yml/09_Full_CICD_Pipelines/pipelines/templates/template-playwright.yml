@@ -20,7 +20,7 @@ jobs:
   displayName: Run ${{ parameters.environment }} ${{ parameters.testType }} Tests
   
   variables:
-    - template: ../../vars/var-common.yml
+    - template: ../vars/var-common.yml
 
     - name: testResultsTitle
       value: 'Playwright ${{ parameters.testType }} ${{ parameters.environment }} Tests'

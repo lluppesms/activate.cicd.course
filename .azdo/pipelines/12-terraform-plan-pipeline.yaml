@@ -1,0 +1,47 @@
+# ----------------------------------------------------------------------------------------------------
+# Pipeline to run a Terraform Init and Plan
+# ----------------------------------------------------------------------------------------------------
+# This pipeline uses a template that expects variables in a variable group - see template for details!
+# ----------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+
+pool:
+  vmImage: ubuntu-latest
+
+trigger: none
+
+# ----------------------------------------------------------------------------------------------------
+parameters:
+- name: deployToEnvironment
+  displayName: Deploy To Environment
+  type: string
+  values:
+    - dev
+    - prod
+  default: dev
+
+- name: tfAction
+  displayName: Terraform Action
+  type: string
+  values:
+    - plan
+    - apply
+  default: plan
+
+# ----------------------------------------------------------------------------------------------------
+variables:
+  - template: vars/var-service-connections.yml
+
+# ----------------------------------------------------------------------------------------------------
+jobs:
+- ${{ if eq(parameters.tfAction, 'plan') }}:
+  - template: ./templates/jobs/tf-plan-template.yml
+    parameters:
+      env: ${{ parameters.deployToEnvironment }}
+      serviceConnectionName: $(serviceConnectionName)
+
+- ${{ if eq(parameters.tfAction, 'apply') }}:
+  - template: ./templates/jobs/tf-apply-template.yml
+    parameters:
+      env: ${{ parameters.deployToEnvironment }}
+      serviceConnectionName: $(serviceConnectionName)
