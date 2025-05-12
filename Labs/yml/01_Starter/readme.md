@@ -8,7 +8,7 @@ Prerequisites:
 
 * If you have not installed VS Code,  please follow the instructions in the [Set up Visual Studio Code](../../setup/3-Visual-Studio-Code.md)
 
-* If you have not created your own repository for the class based on the course materials, please follow the instructions in the [Import the Class Repository](../../setup/4-clone-Repo.md) guide.
+* If you have not created your own repository for the class based on the course materials, please follow the instructions in the [Import the Class Repository](../../setup/4-Clone-Repo.md) guide.
 
 * If you need a custom Build Agent for some reason and have not created one yet, you can install a Build Agent on your VM or your Local Machine.  Please follow the instructions in the [Create a Custom Build Agent](../../build-agents/desktop-runner/readme.md) guide.
 
