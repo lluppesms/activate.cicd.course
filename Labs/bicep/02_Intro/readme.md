@@ -4,6 +4,24 @@
 
 * If you have not created your own repository for this class based on the course materials, please follow the instructions in the [Import the Class Repository](../../setup/4-Clone-Repo.md) guide.
 
+## Customization Steps
+
+* If you have an existing resource group name that you want to use, use the VS Code Global Search/Replace function to replace `rg-demo` with `rg-your-resource-group-name`.
+
+* If you have a particular Azure region that you want to target, use the VS Code Global Search/Replace function to replace `eastus` with `centralus` (or whatever the short version of the Azure region is that you wish to target).
+
+## Update Steps
+
+* If you have troubles during the labs below such as the following command, which is saying that your Bicep Parameter file is not a valid JSON file (which is true -- it is not -- but that's not really the problem!), that may be a sign that your Azure CLI is not up to date.
+
+  ![AZ Error](img/az_error.png)
+
+* Run the `az --version` command to check your Azure CLI version.  If there are updates available, update your Azure CLI by running the `az upgrade` command, then run it again to make sure all the extensions are up to date.
+
+  ![AZ Upgrade](img/az_upgrade.png)
+
+## Login Steps
+
 ---
 
 Open the repository in VS Code, then open a terminal in VS Code (menu: Terminal -> New Terminal) and execute the following command to change to the Lab 2 folder:
