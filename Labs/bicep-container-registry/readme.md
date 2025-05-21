@@ -89,7 +89,7 @@ A bicep.config file will need to be added to a project that refers to the regist
 
 ### 2.2 Security
 
-In order for the pipeline to access the bicep container registry, the service principal will need to be in the `acrpull` role for the container registry.  In this example repository, the service principal is granted `acrpush` (which includes acrpull) as part of the [containerregistry.bicep](bicep/containerregistry.bicep) deployment, as deployed in the [create-bicep-registry.yml](./azdo/pipelines/create-bicep-container-registry.yml) pipeline.
+In order for the pipeline to access the bicep container registry, the service principal will need to be in the `acrpull` role for the container registry.  In this example repository, the service principal is granted `acrpush` (which includes acrpull) as part of the [containerregistry.bicep](bicep/containerregistry.bicep) deployment, as deployed in the [create-bicep-registry.yml](./.azdo/pipelines/create-bicep-container-registry.yml) pipeline.
 
 ### 2.3 Warning - Don't use these Bicep Files in Production!
 
